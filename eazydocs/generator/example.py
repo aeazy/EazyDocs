@@ -5,11 +5,15 @@ from pandas import DataFrame
 
 
 class Example:
-    def __init__(self, code: str, data: DataFrame, num_rows: int = 5, num_columns: int = 5) -> None:
-        self.code = code
+    def __init__(self, code: str, data: DataFrame, df_shape: list[int]) -> None:
+        if len(df_shape) != 2:
+            raise ValueError("Length of list provided for 'df_shape' must be exactly 2 integers: [num_rows, num_columns]")
+
         self.data = data
-        self.rows = num_rows
-        self.columns = num_columns
+        self.code = code
+
+        self.rows = df_shape[0]
+        self.columns = df_shape[1]
 
         self.get_example()
 

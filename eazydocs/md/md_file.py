@@ -2,28 +2,40 @@ from pathlib import Path
 
 
 class MDFile:
-    def __init__(self, filename: str = None, to_append: str = None, output_dir: None | Path = None) -> None:
+    def __init__(self, filename: str = None, to_append: str = None, filepath: Path | str = None) -> None:
         if to_append == None:
             raise ValueError("Markdown() missing 1 required positional argument: 'to_append'")
+        else:
+            self.to_append = to_append
 
-        if output_dir != None:
-            self.path = self.__set_path_attr__(output_dir)
+        if filepath != None:
+            self.path = self.__set_path_attr__(filepath)
         else:
             self.path = self.__set_path_attr__()
 
         if filename != None:
-            filename = self.__check_filename__(filename)
-            self.append(filename, to_append)
+            self.filename = self.__check_filename__(filename)
+            # self.append(filename, to_append)
         else:
-            filename = self.__set_filename__()
-            self.append(filename, to_append)
+            self.filename = self.__set_filename__()
+            # self.append(filename, to_append)
 
-    def append(self, filename: str, to_append: str) -> None:
-        with open(filename, "+a") as f:
+    def append(self) -> None:
+        with open(self.filename, "+a") as f:
+            f.write(self.to_append)
+
+        print(f"Succesfully updated {self.filename}.")
+
+    def append_to_param(self, method_name: str) -> None: 
+        before, after = self.__slice_contents_at_insert_position__(method_name)
+        to_append = self.__generate_output_str__(before, after)
+        
+        with open(self.filename, 'w') as f:
             f.write(to_append)
+        
+        print(f"Succesfully updated '{method_name}' in '{self.filename}'.")
 
-        print(f"Succesfully updated {filename}.")
-
+                
     def __set_path_attr__(self, path: None | Path = None) -> None:
         if path != None:
             self.p = path
@@ -67,3 +79,19 @@ class MDFile:
             f.write("")
 
         print(f"Created markdown file ({filename}) at {path}.")
+
+    def __slice_contents_at_insert_position__(self, method_name: str) -> tuple[str, str]:
+        with open(self.filename, "r+") as f:
+            contents = f.read()
+
+            if contents.__contains__(method_name) is False:
+                raise ValueError(f"Unable to find {method_name} in {filename}. Confirm the spelling is correct, as well as the filepath: {file}")
+
+            method_start = contents.find(f">{method_name}<")
+            next_method_start = contents.find("<strong", method_start)
+            
+            return (contents[0:next_method_start], contents[next_method_start:-1])
+
+    def __generate_output_str__(self, s1: str, s2: str) -> str:
+        output = s1 + "\n\n> Example\n\n" + self.to_append + "\n" + s2
+        return output

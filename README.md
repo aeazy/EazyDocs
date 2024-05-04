@@ -21,6 +21,7 @@ eazydocs looks to provide an easy way to generate code documentation by cutting 
   - [Using a Method object](#using-a-method-object)
   - [Creating a MD File](#creating-a-md-file)
 - `eazydocs.generate_example()`:
+  - [Overview](#eazydocsgenerate_example)
 
 ## eazydocs.generate_docs
 
@@ -95,7 +96,7 @@ eazydocs looks to provide an easy way to generate code documentation by cutting 
     </ul>
     </div>
 
-* Notice the placeholder generated under the method name: 'description'. 
+* Notice the placeholder generated under the method name: 'description'.
 
 ### Using a Method object
 
@@ -211,4 +212,55 @@ eazydocs looks to provide an easy way to generate code documentation by cutting 
   - The string argument provided to `filepath` is joined with `filename` as a pathlib.Path object
 
 ## eazydocs.generate_example
-`eazydocs.generate_example` provides a simple method to format pandas.DataFrames and include examples in your README files. 
+
+`eazydocs.generate_example` provides a simple method to format pandas.DataFrames and include them as examples in your README file.
+
+<strong id='generate-example'>generate_example</strong>(<b>df</b>, <b>df_shape</b><i>=[5, 5]</i>, <b>code</b><i>='df'</i>, <b>append_to_method</b><i>=False</i>, <b>method_name</b><i>=_NoDefault.no_default</i>, <b>filename</b><i>=_NoDefault.no_default</i>, <b>filepath</b><i>=_NoDefault.no_default</i>)
+
+> Parameters
+
+<ul style='list-style: none'>
+    <li>
+        <b>df : <i>pandas.DataFrame</i></b>
+        <ul style='list-style: none'>
+            <li>Pandas DataFrame to format.</li>
+        </ul>
+    </li>
+    <li>
+        <b>df_shape : <i>list[int], default [5, 5]</i></b>
+        <ul style='list-style: none'>
+            <li>Integer list defining the desired shape of the <code>df</code>. First integer is the desired number of rows, while the second is the desired number of columns.</li>
+        </ul>
+    </li>
+    <li>
+        <b>code : <i>str, default 'df'</i></b>
+        <ul style='list-style: none'>
+            <li>Line of code you would like displayed before the DataFrame example. This is useful if you are demonstrating how a method changes a DataFrame.</li>
+        </ul>
+    </li>
+    <li>
+        <b>append_to_method : <i>bool, default False</i></b>
+        <ul style='list-style: none'>
+            <li>Append string output to existing MD file.</li>
+        </ul>
+    </li>
+    <li>
+        <b>method_name : <i>str, optional</i></b>
+        <ul style='list-style: none'>
+            <li>description</li>
+        </ul>
+    </li>
+    <li>
+        <b>filename : <i>str, optional</i></b>
+        <ul style='list-style: none'>
+            <li>description</li>
+        </ul>
+    </li>
+    <li>
+        <b>filepath : <i>str, optional</i></b>
+        <ul style='list-style: none'>
+            <li>description</li>
+        </ul>
+    </li>
+</ul>
+
