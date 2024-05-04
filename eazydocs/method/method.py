@@ -62,10 +62,14 @@ class Method:
         self.get_output()
 
     def get_output(self) -> None:
-        params = self.__fmt_params__()
+        if self.params:
+            params = self.__fmt_params__()
+        else:
+            params = ""
+
         fn = self.fn.removesuffix(", ") + ")"
 
-        self.output = f"{fn}\n{params}</ul>"
+        self.output = f"{fn}\n{params}"
 
     def __repr__(self) -> str:
         return self.output
@@ -78,6 +82,8 @@ class Method:
             parsed_param = self.__parse_arg__(param)
             self.__append_param__(parsed_param)
             output += self.__fmt_arg__(parsed_param)
+        
+        output += "</ul>"
 
         return output
 
