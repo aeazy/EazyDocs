@@ -34,6 +34,6 @@ class Generator:
 
     def __fmt_class_name__(self) -> None:
         if self.docs.__contains__("__init__"):
-            docs = self.docs.replace('--init--', self.name.lower())
-            docs = docs.replace('__init__', self.name)
+            docs = self.docs.replace("--init--", self.name.lower())
+            docs = docs.replace("__init__", self.name)
             self.docs = docs

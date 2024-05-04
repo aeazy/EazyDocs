@@ -5,9 +5,11 @@ from pandas import DataFrame
 
 
 class Example:
-    def __init__(self, code: str, data: DataFrame) -> None:
+    def __init__(self, code: str, data: DataFrame, num_rows: int = 5, num_columns: int = 5) -> None:
         self.code = code
         self.data = data
+        self.rows = num_rows
+        self.columns = num_columns
 
         self.get_example()
 
@@ -23,10 +25,10 @@ class Example:
     def __format_df__(self) -> str:
         df = self.data
 
-        if self.data.shape[0] > 5:
-            df = df[0:5]
+        if self.data.shape[0] > self.rows:
+            df = df[0 : self.rows]
 
-        if self.data.shape[1] > 4:
-            df = df.iloc[0:5, 0:4]
+        if self.data.shape[1] > self.columns:
+            df = df.iloc[0 : self.columns, 0 : self.columns]
 
         return df.to_string()

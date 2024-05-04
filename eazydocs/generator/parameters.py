@@ -29,7 +29,6 @@ class Parameters(Method):
     def __repr__(self) -> str:
         return self.params
 
-
     def get_params_output(self, method: object) -> str:
         params = self.__get_params__(method)
 
@@ -47,10 +46,10 @@ class Parameters(Method):
 
     def __get_params__(self, method: object) -> list[Param]:
         sig_params = signature(method).parameters
-        parameters_filtered =[param for param in sig_params.keys() if param != "self"]
-        
+        parameters_filtered = [param for param in sig_params.keys() if param != "self"]
+
         parameters = [sig_params.get(param) for param in parameters_filtered]
-        
+
         params = list()
 
         for param in parameters:
@@ -75,7 +74,13 @@ class Parameters(Method):
         else:
             template = DEFAULT_ARG_TEMPLATE
 
-        template = template.replace("{name}", param.name).replace("{type}", param.arg_type).replace("{default_arg}", param.default_arg)
+        if "None" in param.default_arg:
+            template = template.replace("{name}", param.name).replace("{type}", param.arg_type).replace("{default_arg}", f"optional")
+            param.default_arg = "_NoDefault.no_default"
+        else:
+            template = (
+                template.replace("{name}", param.name).replace("{type}", param.arg_type).replace("{default_arg}", f"default {param.default_arg}")
+            )
 
         self.__append_param__(param)
 
@@ -93,3 +98,4 @@ class Parameters(Method):
             to_append += ", "
 
         self.fn += to_append
+
