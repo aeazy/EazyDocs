@@ -1,7 +1,7 @@
 from pathlib import Path
 
 
-class Markdown:
+class MDFile:
     def __init__(self, filename: str = None, to_append: str = None, output_dir: None | Path = None) -> None:
         if to_append == None:
             raise ValueError("Markdown() missing 1 required positional argument: 'to_append'")

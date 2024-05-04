@@ -1,7 +1,8 @@
 from dataclasses import dataclass
 from inspect import signature
 
-from method.templates import DEFAULT_ARG_TEMPLATE, TEMPLATE
+from generator.method import Method
+from generator.templates import DEFAULT_ARG_TEMPLATE, TEMPLATE
 
 
 @dataclass
@@ -11,8 +12,9 @@ class Param:
     default_arg: str
 
 
-class MethodGenerator:
+class Parameters(Method):
     def __init__(self, method: object) -> None:
+        super().__init__(method.__name__)
         self.generate(method)
 
     def generate(self, method: object) -> None:
@@ -22,15 +24,11 @@ class MethodGenerator:
 
         fn = self.fn.removesuffix(", ") + ")"
 
-        self.output = f"{fn}\n{params}"
+        self.params = f"{fn}\n{params}"
 
     def __repr__(self) -> str:
-        return self.output
+        return self.params
 
-    def __generate_function__(self, method: str) -> str:
-        method = method.strip()
-        method_id = method.replace("_", "-")
-        return f"<strong id='{method_id}'>{method}</strong>("
 
     def get_params_output(self, method: object) -> str:
         params = self.__get_params__(method)
@@ -48,11 +46,14 @@ class MethodGenerator:
         return output
 
     def __get_params__(self, method: object) -> list[Param]:
-        sig = signature(method)
-
+        sig_params = signature(method).parameters
+        parameters_filtered =[param for param in sig_params.keys() if param != "self"]
+        
+        parameters = [sig_params.get(param) for param in parameters_filtered]
+        
         params = list()
 
-        for param in sig.parameters.values():
+        for param in parameters:
             param = str(param).split(":")
             param_name = param[0].strip()
             param_arg_type = param[1].strip()
