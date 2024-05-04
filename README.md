@@ -13,6 +13,12 @@ eazydocs looks to provide an easy way to generate code documentation by cutting 
   pip install eazydocs-24.X.X-py3-none-any.whl
   ```
 
+eazydocs.generate_docs()
+
+## Usage
+```
+from eazydocs import generate_docs
+
 
 
 

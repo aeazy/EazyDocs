@@ -1,6 +1,7 @@
 from pandas import DataFrame
 
 from method.method import Method
+from method.method_generator import MethodGenerator
 from example.example import Example
 from markdown.markdown import Markdown
 
@@ -23,3 +24,10 @@ def generate_docs(
         return docs
     else:
         Markdown(filename, docs, filepath)
+
+
+def example_function():
+    pass
+
+
+print(MethodGenerator(example_function))
