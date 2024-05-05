@@ -52,7 +52,7 @@ eazydocs looks to provide an easy way to generate code documentation by cutting 
     <li>
         <b>skip_private : <i>bool, default True</i></b>
         <ul style='list-style: none'>
-            <li>Include functions or methods with the prefix '_' or '__'.</li>
+            <li>Skip functions or methods with the prefix '_' or '__'.</li>
         </ul>
     </li>
     <li>

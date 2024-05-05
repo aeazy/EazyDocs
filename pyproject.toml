@@ -4,14 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "eazydocs"
-version = "24.5.3"
+version = "24.5.4"
 authors = [
     {name="Aric Kraft"},
 ]
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: GPL License",
-    "Operating System :: Windows",
+    "License :: OSI Approved :: MIT License",
 ]
 dependencies = [
     "pandas>=2.2.1",
