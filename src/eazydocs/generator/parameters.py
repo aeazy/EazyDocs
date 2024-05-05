@@ -33,6 +33,7 @@ class Parameters(Method):
 
         if params == []:
             return ""
+
         blockquote = "> Parameters"
         output = f"\n{blockquote}\n\n<ul style='list-style: none'>\n"
 
@@ -45,10 +46,15 @@ class Parameters(Method):
 
     def _get_params(self, method: object) -> list[Param]:
         sig_params = signature(method).parameters
-        parameters_filtered = [param for param in sig_params.keys() if param != "self"]
 
         if self.skip_private:
-            parameters_filtered = [param for param in parameters_filtered if param[0] != "_" and param != "__init__" and param[0:2] != "__"]
+            parameters_filtered = [
+                param
+                for param in sig_params.keys()
+                if param != "self" and param[0] != "_" and param != "__init__" and param[0:2] != "__" and param != "other"
+            ]
+        else:
+            parameters_filtered = [param for param in sig_params.keys() if param != "self"]
 
         parameters = [sig_params.get(param) for param in parameters_filtered]
 

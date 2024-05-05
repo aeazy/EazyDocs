@@ -15,21 +15,23 @@ class Generator:
 
         for name, member in getmembers(cls):
             if ismethod(member) or isfunction(member):
-                if self._check_params(member):
+                if self._check_member(member):
                     params = Parameters(member, self.skip_private).params
                     docs += f"\n{params}\n"
 
         self.docs = docs
         self._fmt_class_name()
 
-    def _get_params(self, member: object) -> str:
-        if ismethod(member) or isfunction(member):
-            if self._check_params(member):
-                params = Parameters(member).params
-                return f"\n{params}\n"
-
     def __repr__(self) -> str:
         return self.docs
+
+    def _check_member(self, method: object) -> bool:
+        method_name = method.__name__
+        if self.skip_private:
+            if method_name[0:2] == "__" and method_name != "__init__":
+                return False
+
+        return self._check_params(method)
 
     def _check_params(self, method) -> bool:
         params = signature(method).parameters
