@@ -1,6 +1,6 @@
 from inspect import getmembers, signature, isfunction, ismethod
 
-from generator.parameters import Parameters
+from eazydocs.generator.parameters import Parameters
 
 
 class Generator:

@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from inspect import signature
 
-from generator.method import Method
-from generator.templates import DEFAULT_ARG_TEMPLATE, TEMPLATE
+from eazydocs.generator.method import Method
+from eazydocs.generator.templates import DEFAULT_ARG_TEMPLATE, TEMPLATE
 
 
 @dataclass
@@ -56,8 +56,14 @@ class Parameters(Method):
 
         for param in parameters:
             param = str(param).split(":")
+
             param_name = param[0].strip()
-            param_arg_type = param[1].strip()
+
+            # TODO: Find a way to handle parameters that are not typed but have a default value
+            if len(param) < 2:
+                param_arg_type = "type"
+            else:
+                param_arg_type = param[1].strip()
 
             if "=" in param_arg_type:
                 param_arg_type_split = param_arg_type.split("=")

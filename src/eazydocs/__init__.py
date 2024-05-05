@@ -1,11 +1,11 @@
 from inspect import isclass, ismethod, isfunction
 from pandas import DataFrame
 
-from generator.example import Example
-from generator.generator import Generator
-from generator.parameters import Parameters
+from eazydocs.generator.example import Example
+from eazydocs.generator.generator import Generator
+from eazydocs.generator.parameters import Parameters
 
-from md.md_file import MDFile
+from eazydocs.md.md_file import MDFile
 
 
 def generate_docs(obj: object, skip_private: bool = True, append_to_file: bool = False, filename: str = None, filepath: str = None) -> str:
