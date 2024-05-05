@@ -407,7 +407,7 @@ Succesfully updated 'EXAMPLE.md' (~/$USER/easydocs/EXAMPLE.md)
                 <li>description</li>
             </ul>
         </li>
-    </ul>
+    </ul><br>
 
     **~/\$USER/main.py**
 
