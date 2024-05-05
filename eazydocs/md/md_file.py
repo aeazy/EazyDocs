@@ -8,35 +8,36 @@ class MDFile:
         else:
             self.to_append = to_append
 
-        if filepath != None:
-            self.path = self.__set_path_attr__(filepath)
-        else:
-            self.path = self.__set_path_attr__()
+        self._set_path_attr(filepath)
 
         if filename != None:
-            self.filename = self.__check_filename__(filename)
-            # self.append(filename, to_append)
+            filename = self._check_filename(filename)
         else:
-            self.filename = self.__set_filename__()
-            # self.append(filename, to_append)
+            filename = self._set_filename()
+
+        self.filename = filename
+        self.filepath = Path(self.cwd, filename)
 
     def append(self) -> None:
-        with open(self.filename, "+a") as f:
-            f.write(self.to_append)
-
-        print(f"Succesfully updated {self.filename}.")
-
-    def append_to_param(self, method_name: str) -> None: 
-        before, after = self.__slice_contents_at_insert_position__(method_name)
-        to_append = self.__generate_output_str__(before, after)
-        
-        with open(self.filename, 'w') as f:
+        to_append = f"\n\n{self.to_append}"
+        with open(self.filepath, "+a") as f:
             f.write(to_append)
-        
-        print(f"Succesfully updated '{method_name}' in '{self.filename}'.")
 
-                
-    def __set_path_attr__(self, path: None | Path = None) -> None:
+        print(f"Succesfully updated '{self.filename}' ({self.filepath})")
+
+    def append_to_param(self, method_name: str) -> None:
+        before, after = self._slice_contents_at_insert_position(method_name)
+        to_append = self._generate_output_str(before, after)
+
+        with open(self.filepath, "w") as f:
+            f.write(to_append)
+
+        print(f"Succesfully updated '{method_name}' in '{self.filename}' ({self.filepath})")
+
+    def _set_path_attr(self, path: None | Path = None) -> None:
+        if type(path) == str:
+            path = Path(path)
+
         if path != None:
             self.p = path
             self.cwd = path
@@ -45,7 +46,7 @@ class MDFile:
             self.p = p
             self.cwd = p.cwd()
 
-    def __check_filename__(self, filename: str) -> str:
+    def _check_filename(self, filename: str) -> str:
         filename = filename.strip()
 
         if filename[-3:] != ".md":
@@ -53,7 +54,7 @@ class MDFile:
 
         return filename
 
-    def __set_filename__(self) -> str:
+    def _set_filename(self) -> str:
         if Path(self.cwd, "README.md").exists():
             md_files = list(self.p.glob("README_*.md"))
 
@@ -68,30 +69,33 @@ class MDFile:
         else:
             filename = "README.md"
 
-        self.__create_file__(filename)
+        self._create_file(filename)
 
         return filename
 
-    def __create_file__(self, filename: str) -> None:
-        path = Path(self.p, filename)
-
-        with open(path, "w") as f:
+    def _create_file(self, filename: str) -> None:
+        with open(self.filepath, "w") as f:
             f.write("")
 
-        print(f"Created markdown file ({filename}) at {path}.")
+        print(f"Created markdown file: '{filename}'.")
 
-    def __slice_contents_at_insert_position__(self, method_name: str) -> tuple[str, str]:
-        with open(self.filename, "r+") as f:
+    def _slice_contents_at_insert_position(self, method_name: str) -> tuple[str, str]:
+        with open(self.filepath, "r+") as f:
             contents = f.read()
 
+            if contents == "":
+                raise ValueError(f"Unable to append to '{method_name}' - '{self.filename}' is empty")
             if contents.__contains__(method_name) is False:
-                raise ValueError(f"Unable to find {method_name} in {filename}. Confirm the spelling is correct, as well as the filepath: {file}")
+                raise ValueError(f"Unable to find {method_name} in {self.filename}. Confirm '{method_name}' is found in '{self.filepath}'")
 
             method_start = contents.find(f">{method_name}<")
             next_method_start = contents.find("<strong", method_start)
-            
-            return (contents[0:next_method_start], contents[next_method_start:-1])
 
-    def __generate_output_str__(self, s1: str, s2: str) -> str:
+            before = contents[0:next_method_start].strip()
+            after = contents[next_method_start:-1].strip()
+
+            return (before, after)
+
+    def _generate_output_str(self, s1: str, s2: str) -> str:
         output = s1 + "\n\n> Example\n\n" + self.to_append + "\n" + s2
         return output

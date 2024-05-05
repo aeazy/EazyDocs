@@ -4,27 +4,34 @@ from generator.parameters import Parameters
 
 
 class Generator:
-    def __init__(self, cls: object) -> None:
+    def __init__(self, cls: object, skip_private: bool) -> None:
+        self.skip_private = skip_private
         self.name = cls.__name__
-        self.docs = str()
 
         self.generate_docs(cls)
 
     def generate_docs(self, cls: object) -> None:
-        for name, member in getmembers(cls):
-            if name[0:2] == "__" and name != "__init__":
-                pass
-            elif ismethod(member) or isfunction(member):
-                if self.__check_params__(member):
-                    params = Parameters(member).params
-                    self.docs += f"\n{params}\n"
+        docs = str()
 
-        self.__fmt_class_name__()
+        for name, member in getmembers(cls):
+            if ismethod(member) or isfunction(member):
+                if self._check_params(member):
+                    params = Parameters(member, self.skip_private).params
+                    docs += f"\n{params}\n"
+
+        self.docs = docs
+        self._fmt_class_name()
+
+    def _get_params(self, member: object) -> str:
+        if ismethod(member) or isfunction(member):
+            if self._check_params(member):
+                params = Parameters(member).params
+                return f"\n{params}\n"
 
     def __repr__(self) -> str:
         return self.docs
 
-    def __check_params__(self, method) -> bool:
+    def _check_params(self, method) -> bool:
         params = signature(method).parameters
         params = [param for param in params.keys() if param != "self"]
         if params == []:
@@ -32,7 +39,7 @@ class Generator:
 
         return True
 
-    def __fmt_class_name__(self) -> None:
+    def _fmt_class_name(self) -> None:
         if self.docs.__contains__("__init__"):
             docs = self.docs.replace("--init--", self.name.lower())
             docs = docs.replace("__init__", self.name)

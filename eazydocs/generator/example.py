@@ -1,8 +1,5 @@
 from pandas import DataFrame
 
-"""eazydocs.example streamlines generating codeblocks for pandas DataFrames.
-"""
-
 
 class Example:
     def __init__(self, code: str, data: DataFrame, df_shape: list[int]) -> None:
@@ -19,20 +16,20 @@ class Example:
 
     def get_example(self) -> None:
         bash = "```"
-        df = self.__format_df__()
+        df = self._format_df()
 
         self.output = f"{bash}\n>>> {self.code}\n{df}\n{bash}"
 
     def __repr__(self) -> str:
         return self.output
 
-    def __format_df__(self) -> str:
+    def _format_df(self) -> str:
         df = self.data
 
-        if self.data.shape[0] > self.rows:
+        if self.rows != -1 and self.data.shape[0] > self.rows:
             df = df[0 : self.rows]
 
-        if self.data.shape[1] > self.columns:
+        if self.columns != -1 and self.data.shape[1] > self.columns:
             df = df.iloc[0 : self.columns, 0 : self.columns]
 
         return df.to_string()

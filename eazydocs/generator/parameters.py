@@ -13,16 +13,15 @@ class Param:
 
 
 class Parameters(Method):
-    def __init__(self, method: object) -> None:
+    def __init__(self, method: object, skip_private: bool) -> None:
         super().__init__(method.__name__)
+        self.skip_private = skip_private
+
         self.generate(method)
 
     def generate(self, method: object) -> None:
-        self.fn = self.__generate_function__(method.__name__)
-
         params = self.get_params_output(method)
-
-        fn = self.fn.removesuffix(", ") + ")"
+        fn = self._fmt_function()
 
         self.params = f"{fn}\n{params}"
 
@@ -30,7 +29,7 @@ class Parameters(Method):
         return self.params
 
     def get_params_output(self, method: object) -> str:
-        params = self.__get_params__(method)
+        params = self._get_params(method)
 
         if params == []:
             return ""
@@ -38,15 +37,18 @@ class Parameters(Method):
         output = f"\n{blockquote}\n\n<ul style='list-style: none'>\n"
 
         for param in params:
-            output += self.__fmt_param__(param)
+            output += self._fmt_param(param)
 
         output += "</ul>"
 
         return output
 
-    def __get_params__(self, method: object) -> list[Param]:
+    def _get_params(self, method: object) -> list[Param]:
         sig_params = signature(method).parameters
         parameters_filtered = [param for param in sig_params.keys() if param != "self"]
+
+        if self.skip_private:
+            parameters_filtered = [param for param in parameters_filtered if param[0] != "_" and param != "__init__" and param[0:2] != "__"]
 
         parameters = [sig_params.get(param) for param in parameters_filtered]
 
@@ -68,7 +70,7 @@ class Parameters(Method):
 
         return params
 
-    def __fmt_param__(self, param: Param) -> None:
+    def _fmt_param(self, param: Param) -> None:
         if param.default_arg == "":
             template = TEMPLATE
         else:
@@ -82,11 +84,11 @@ class Parameters(Method):
                 template.replace("{name}", param.name).replace("{type}", param.arg_type).replace("{default_arg}", f"default {param.default_arg}")
             )
 
-        self.__append_param__(param)
+        self._append_param(param)
 
         return template
 
-    def __append_param__(self, param: Param) -> None:
+    def _append_param(self, param: Param) -> None:
         name = param.name
         default_arg = param.default_arg
 
@@ -98,4 +100,3 @@ class Parameters(Method):
             to_append += ", "
 
         self.fn += to_append
-
