@@ -3,3 +3,4 @@ tests/
 
 eazydocs.egg-info
 dist/
+dist.md
