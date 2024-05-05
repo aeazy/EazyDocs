@@ -28,7 +28,7 @@ class Generator:
     def _check_member(self, method: object) -> bool:
         method_name = method.__name__
         if self.skip_private:
-            if method_name[0:2] == "__" and method_name != "__init__":
+            if method_name[0] == "_" or method_name[0:2] == "__" and method_name != "__init__":
                 return False
 
         return self._check_params(method)

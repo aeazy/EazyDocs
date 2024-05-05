@@ -49,9 +49,7 @@ class Parameters(Method):
 
         if self.skip_private:
             parameters_filtered = [
-                param
-                for param in sig_params.keys()
-                if param != "self" and param[0] != "_" and param != "__init__" and param[0:2] != "__" and param != "other"
+                param for param in sig_params.keys() if param != "self" and param[0] != "_" and param != "__init__" and param[0:2] != "__"
             ]
         else:
             parameters_filtered = [param for param in sig_params.keys() if param != "self"]
