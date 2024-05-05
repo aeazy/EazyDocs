@@ -74,7 +74,7 @@ class MDFile:
         return filename
 
     def _create_file(self, filename: str) -> None:
-        with open(self.filepath, "w") as f:
+        with open(filename, "w") as f:
             f.write("")
 
         print(f"Created markdown file: '{filename}'.")
