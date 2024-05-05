@@ -16,6 +16,8 @@ eazydocs looks to provide an easy way to generate code documentation by cutting 
   - [Creating a MD File](#creating-a-md-file)
 - `eazydocs.generate_example`:
   - [Overview](#eazydocsgenerate_example)
+  - [Generating an Example](#creating-an-example-from-a-pandasdataframe)
+  - [Appending to an Existing MD File](#appending-the-example-to-an-existing-md-file)
 
 ### Installation
 
@@ -334,12 +336,12 @@ eazydocs looks to provide an easy way to generate code documentation by cutting 
       ```
   ````
 
-- Appending the example to an existing MD file:
+#### Appending the example to an existing MD file:
 
-  ```
-  >>> generate_example(df, append_to_file=True, filename='EXAMPLE')
-  Succesfully updated 'EXAMPLE.md' (~/$USER/easydocs/EXAMPLE.md)
-  ```
+```
+>>> generate_example(df, append_to_file=True, filename='EXAMPLE')
+Succesfully updated 'EXAMPLE.md' (~/$USER/easydocs/EXAMPLE.md)
+```
 
 - Appending the example to a method in an existing MD file:
 
