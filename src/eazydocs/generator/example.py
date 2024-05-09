@@ -30,6 +30,6 @@ class Example:
             df = df[0 : self.rows]
 
         if self.columns != -1 and self.data.shape[1] > self.columns:
-            df = df.iloc[0 : self.columns, 0 : self.columns]
+            df = df.iloc[0 : self.rows, 0 : self.columns]
 
         return df.to_string()
