@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "eazydocs"
-version = "24.5.5"
+version = "24.7.0"
 authors = [
     {name="Aric Kraft"},
 ]
