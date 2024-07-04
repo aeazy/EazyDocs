@@ -23,6 +23,13 @@
             <li>String expression of title text.</li>
         </ul>
     </li>
+    <li>
+        <b>number : <i>float|int</i></b>
+        <ul style='list-style: none'>
+            <li>Number of subplot title text.</li>
+        </ul>
+    </li>
+
 </ul>
 <hr>
 
@@ -43,6 +50,7 @@
             <li>String expression of subplot title text.</li>
         </ul>
     </li>
+
 </ul>
 <hr>
 

@@ -1,9 +1,11 @@
+from collections import defaultdict
+
 from .param import Param
 
 
 class Method:
     def __init__(self, method: str) -> None:
-        self.params = dict()
+        self.params = defaultdict(list)
 
         self.parse_method(method)
 
@@ -24,6 +26,7 @@ class Method:
                 line = line.split(">")
                 name = line[1].split("<")[0]
                 self.name = name
+                self.params[name] = dict(params=list())
                 break
 
         self.name = name
@@ -35,9 +38,26 @@ class Method:
 
                 if self._is_param(line):
                     param = Param(line)
-                    self.params.update({param.name: param.arg_type})
+
+                    description = self._parse_description()
+                    self.params[self.name]["params"].append(
+                        dict(
+                            name=param.name,
+                            arg_type=param.arg_type,
+                            description=description,
+                        )
+                    )
 
     def _is_param(self, arg: str) -> bool:
         if "<b>" not in arg:
             return False
         return True
+
+    def _parse_description(self) -> str:
+        line = self.method.pop(0)
+        if "<li>" not in line:
+            line = self.method.pop(0)
+        description = line.split("<li>")[-1]
+        description = description.replace("</li>", "")
+        return description
+

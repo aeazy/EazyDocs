@@ -33,10 +33,17 @@ class Updater(Markdown):
         method_start = self.contents.find(method_id) - 8
         method_end = self.contents[method_start:].find("<hr>")
 
+        self._compare_method(
+            self.contents[method_start : method_start + method_end]
+        )
+
         contents_before = self.contents[:method_start]
         contents_after = self.contents[method_end:]
 
         new_contents = contents_before + self.updated_method
-        print(new_contents)
 
     # TODO: Check for old method descriptions
+
+    def _compare_method(self, current_method: str) -> None:
+        method = Method(current_method)
+        print(method.name, method.params)
