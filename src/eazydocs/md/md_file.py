@@ -2,9 +2,16 @@ from pathlib import Path
 
 
 class MDFile:
-    def __init__(self, filename: str = None, to_append: str = None, filepath: Path | str = None) -> None:
+    def __init__(
+        self,
+        filename: str = None,
+        to_append: str = None,
+        filepath: Path | str = None,
+    ) -> None:
         if to_append == None:
-            raise ValueError("Markdown() missing 1 required positional argument: 'to_append'")
+            raise ValueError(
+                "MDFile() missing 1 required positional argument: 'to_append'"
+            )
         else:
             self.to_append = to_append
 
@@ -32,7 +39,9 @@ class MDFile:
         with open(self.filepath, "w") as f:
             f.write(to_append)
 
-        print(f"Succesfully updated '{method_name}' in '{self.filename}' ({self.filepath})")
+        print(
+            f"Succesfully updated '{method_name}' in '{self.filename}': {self.filepath}"
+        )
 
     def _set_path_attr(self, path: None | Path = None) -> None:
         if type(path) == str:
@@ -79,14 +88,20 @@ class MDFile:
 
         print(f"Created markdown file: '{filename}'.")
 
-    def _slice_contents_at_insert_position(self, method_name: str) -> tuple[str, str]:
+    def _slice_contents_at_insert_position(
+        self, method_name: str
+    ) -> tuple[str, str]:
         with open(self.filepath, "r+") as f:
             contents = f.read()
 
             if contents == "":
-                raise ValueError(f"Unable to append to '{method_name}' - '{self.filename}' is empty")
+                raise ValueError(
+                    f"Unable to append to '{method_name}' - '{self.filename}' is empty"
+                )
             if contents.__contains__(method_name) is False:
-                raise ValueError(f"Unable to find {method_name} in {self.filename}. Confirm '{method_name}' is found in '{self.filepath}'")
+                raise ValueError(
+                    f"Unable to find {method_name} in {self.filename}. Confirm '{method_name}' is found in '{self.filepath}'"
+                )
 
             method_start = contents.find(f">{method_name}<")
             next_method_start = contents.find("<strong", method_start)

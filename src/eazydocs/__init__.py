@@ -5,10 +5,18 @@ from eazydocs.generator.example import Example
 from eazydocs.generator.generator import Generator
 from eazydocs.generator.parameters import Parameters
 
-from eazydocs.md.md_file import MDFile
+from eazydocs.md import MDFile, Updater
+
+from eazydocs.method import Method
 
 
-def generate_docs(obj: object, skip_private: bool = True, append_to_file: bool = False, filename: str = None, filepath: str = None) -> str:
+def generate_docs(
+    obj: object,
+    skip_private: bool = True,
+    append_to_file: bool = False,
+    filename: str = None,
+    filepath: str = None,
+) -> str:
     if isclass(obj):
         docs = Generator(obj, skip_private).docs
     elif isfunction(obj) or ismethod(obj):
