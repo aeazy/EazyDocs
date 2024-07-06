@@ -12,27 +12,25 @@
 
 ## Methods
 
-<strong id='set-plot-title'>set_plot_title</strong>(<b>text</b>, <b>text2</b><i>=1.1</i>)
+<strong id='set-plot-title'>set_plot_title</strong>(<b>text</b>)
 
 > Parameters
 
 <ul style='list-style: none'>
-<li>
-        <b>text : <i>str, optional</i></b>
+    <li>
+        <b>text : <i>str</i></b>
         <ul style='list-style: none'>
             <li>String expression of title text.</li>
         </ul>
     </li>
-</ul>
-<ul style='list-style: none'>
-<li>
-        <b>text2 : <i>float | int, 1.1</i></b>
+    <li>
+        <b>number : <i>float|int</i></b>
         <ul style='list-style: none'>
-            <li>{description}</li>
+            <li>Number of subplot title text.</li>
         </ul>
     </li>
-</ul>
 
+</ul>
 <hr>
 
 <strong id='set-subplot-title'>set_subplot_title</strong>(<b>plot_num</b>, <b>text</b>)

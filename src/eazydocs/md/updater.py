@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from eazydocs.method import Method
+from eazydocs.generator.templates import DEFAULT_ARG_TEMPLATE
 
 from .markdown import Markdown
 
@@ -22,7 +23,7 @@ class Updater(Markdown):
         self.update_method()
 
     def update_method(self) -> None:
-        self._fmt_method(self.method_to_update)
+        self._get_method(self.method_to_update)
 
         self.load()
 
@@ -37,13 +38,16 @@ class Updater(Markdown):
         )
 
         contents_before = self.contents[:method_start]
-        contents_after = self.contents[method_end:]
+        contents_after = self.contents[(method_start + method_end) :]
 
-        # new_contents = contents_before + self.updated_method
+        new_contents = (
+            contents_before + self.updated_method + "\n" + contents_after
+        )
 
-    # TODO: Check for old method descriptions
+        with open(self.filename, "w") as f:
+            f.write(new_contents)
 
-    def _fmt_method(self, new_method: str) -> None:
+    def _get_method(self, new_method: str) -> None:
         method = Method(new_method)
         name = method.name
 
@@ -60,4 +64,33 @@ class Updater(Markdown):
             if old_param is not None:
                 self.params[key]["description"] = old_param["description"]
 
-        
+        self._fmt_method()
+
+    def _fmt_method(self) -> None:
+        updated_method = self.method_to_update.split("> Parameters")[0]
+        updated_method += "> Parameters\n\n"
+
+        for key, val in self.params.items():
+            updated_method += "<ul style='list-style: none'>\n"
+
+            default_arg = val.get("default_arg")
+
+            if default_arg is None:
+                default_arg = "optional"
+
+            template = DEFAULT_ARG_TEMPLATE
+
+            template = (
+                template.replace("{name}", key)
+                .replace("{type}", val.get("arg_type"))
+                .replace("{default_arg}", default_arg)
+                .replace("{description}", val.get("description"))
+            )
+            template = template.strip()
+            template += "\n</ul>\n"
+
+            updated_method += template
+
+        self.updated_method = updated_method
+
+        # TODO: Get docstring to create Method

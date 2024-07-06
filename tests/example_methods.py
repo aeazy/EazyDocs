@@ -42,7 +42,7 @@ def make_subplot(
     ...
 
 
-def set_plot_title(self, text: str, text2: float | int) -> None:
+def set_plot_title(self, text: str, text2: float | int = 1.1) -> None:
     """_summary_
 
     Args:

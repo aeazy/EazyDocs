@@ -44,6 +44,7 @@ class Method:
                     self.params[self.name].update(
                         {f"{name}":dict(
                                 arg_type=param.arg_type,
+                                default_arg = param.default_arg,
                                 description=description,
                             )
                         }

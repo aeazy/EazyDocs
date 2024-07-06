@@ -17,4 +17,19 @@ class Param:
         arg_type = arg_type.split("</i>")[0]
         arg_type = arg_type.replace("<i>", "").strip()
 
-        self.arg_type = arg_type
+        if "," in arg_type:
+            arg_split = arg_type.split(",")
+            self.arg_type = arg_split[0]
+            self._set_default_arg(arg_split[-1])
+        else:
+            self.arg_type = arg_type
+            self.default_arg = None
+
+    def _set_default_arg(self, arg: str) -> None:
+        arg = arg.replace("default", "").strip()
+        # try:
+        #     if "int" in self.arg_type:
+        #         arg = int(arg)
+        # except ValueError:
+        #     arg = float(arg)
+        self.default_arg = arg
