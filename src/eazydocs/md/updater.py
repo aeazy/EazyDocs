@@ -19,15 +19,14 @@ class Updater(Markdown):
 
         self.updated_method = method_to_update
 
-        method = Method(method_to_update)
-        self.method_name = method.name
+        self.method = Method(method_to_update)
 
         self.update_method()
 
     def update_method(self) -> None:
         self.load()
 
-        method_name = self.method_name.replace("_", "-")
+        method_name = self.method.name.replace("_", "-")
         method_id = f"id='{method_name}'"
 
         method_start = self.contents.find(method_id) - 8
@@ -46,4 +45,7 @@ class Updater(Markdown):
 
     def _compare_method(self, current_method: str) -> None:
         method = Method(current_method)
-        print(method.name, method.params)
+        current_params = method.params.get(method.name)
+        print(current_params)
+
+        

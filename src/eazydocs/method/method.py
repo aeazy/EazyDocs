@@ -26,7 +26,7 @@ class Method:
                 line = line.split(">")
                 name = line[1].split("<")[0]
                 self.name = name
-                self.params[name] = dict(params=list())
+                self.params[name] = list()
                 break
 
         self.name = name
@@ -40,7 +40,7 @@ class Method:
                     param = Param(line)
 
                     description = self._parse_description()
-                    self.params[self.name]["params"].append(
+                    self.params[self.name].append(
                         dict(
                             name=param.name,
                             arg_type=param.arg_type,
