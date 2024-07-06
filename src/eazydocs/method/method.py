@@ -26,7 +26,7 @@ class Method:
                 line = line.split(">")
                 name = line[1].split("<")[0]
                 self.name = name
-                self.params[name] = list()
+                self.params[name] = dict()
                 break
 
         self.name = name
@@ -38,14 +38,15 @@ class Method:
 
                 if self._is_param(line):
                     param = Param(line)
+                    name = param.name
 
                     description = self._parse_description()
-                    self.params[self.name].append(
-                        dict(
-                            name=param.name,
-                            arg_type=param.arg_type,
-                            description=description,
-                        )
+                    self.params[self.name].update(
+                        {f"{name}":dict(
+                                arg_type=param.arg_type,
+                                description=description,
+                            )
+                        }
                     )
 
     def _is_param(self, arg: str) -> bool:
@@ -60,4 +61,3 @@ class Method:
         description = line.split("<li>")[-1]
         description = description.replace("</li>", "")
         return description
-

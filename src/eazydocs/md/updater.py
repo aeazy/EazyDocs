@@ -17,13 +17,13 @@ class Updater(Markdown):
         if method_to_update is None:
             raise TypeError("Missing required argument 'method'")
 
-        self.updated_method = method_to_update
-
-        self.method = Method(method_to_update)
+        self.method_to_update = method_to_update
 
         self.update_method()
 
     def update_method(self) -> None:
+        self._fmt_method(self.method_to_update)
+
         self.load()
 
         method_name = self.method.name.replace("_", "-")
@@ -32,20 +32,32 @@ class Updater(Markdown):
         method_start = self.contents.find(method_id) - 8
         method_end = self.contents[method_start:].find("<hr>")
 
-        self._compare_method(
+        self._copy_description(
             self.contents[method_start : method_start + method_end]
         )
 
         contents_before = self.contents[:method_start]
         contents_after = self.contents[method_end:]
 
-        new_contents = contents_before + self.updated_method
+        # new_contents = contents_before + self.updated_method
 
     # TODO: Check for old method descriptions
 
-    def _compare_method(self, current_method: str) -> None:
+    def _fmt_method(self, new_method: str) -> None:
+        method = Method(new_method)
+        name = method.name
+
+        self.method = method
+        self.params: dict = method.params.get(name)
+
+    def _copy_description(self, current_method: str) -> None:
         method = Method(current_method)
-        current_params = method.params.get(method.name)
-        print(current_params)
+        current_params: dict = method.params.get(method.name)
+
+        for key, val in self.params.items():
+            old_param = current_params.get(key)
+
+            if old_param is not None:
+                self.params[key]["description"] = old_param["description"]
 
         
