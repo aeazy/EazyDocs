@@ -12,6 +12,6 @@ filepath = "C:/Software/EazyDocs-v2/eazydocs/tests"
 
 # create_md_file(Example)
 
-r = update_md_file(set_plot_title, "readme")
+r = update_md_file(Example, "readme")
 
 # print(parser.methods)

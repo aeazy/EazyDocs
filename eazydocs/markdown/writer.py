@@ -28,5 +28,6 @@ class Writer:
     def write(self) -> None:
         with open(self.filename, "w") as f:
             f.write(self.contents)
-            print(f"Markdown file successfully created: {self.filename}")
+            
+        print(f"Success! See the file here: {self.filename}")
 

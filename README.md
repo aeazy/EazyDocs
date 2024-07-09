@@ -1,7 +1,8 @@
 ## Example
 
 - [Parameters](#Example)
-- Methods: - [example_method](#example-method)
+- Methods:
+	- [example_method](#example-method)
 
 <strong id='Example'>Example</strong>(<b>val</b>, <b>string</b><i>=Test</i>, <b>num</b>)
 
@@ -33,8 +34,7 @@
 </ul>
 
 <hr>
-
-<strong id='example-method'>example_method</strong>(<b>param</b>, <b>param2</b><i>=\_NoDefault.no_default</i>, <b>param3</b><i>="Test"</i>)
+<strong id='example-method'>example_method</strong>(<b>param</b>, <b>param2</b><i>=_NoDefault.no_default</i>, <b>param3</b><i>="Test"</i>)
 
 > Parameters
 
@@ -64,6 +64,7 @@
 </ul>
 
 <hr>
+
 <strong id='set-plot-title'>set_plot_title</strong>(<b>a</b>, <b>text</b><i>=_NoDefault.no_default</i>, <b>text2</b><i>=1.1</i>)
 
 > Parameters
@@ -72,7 +73,7 @@
 	<li id='set_plot_title-a'>
 		<b>a : <i>str</i></b>
 		<ul style='list-style: none'>
-			<li id='set_plot_title-a-description'>String.</li>
+			<li id='set_plot_title-a-description'>String expression representing plot.</li>
 		</ul>
 	</li>
 </ul>
@@ -88,9 +89,10 @@
 	<li id='set_plot_title-text2'>
 		<b>text2 : <i>float | int, default 1.1</i></b>
 		<ul style='list-style: none'>
-			<li id='set_plot_title-text2-description'>description.</li>
+			<li id='set_plot_title-text2-description'>_description_.</li>
 		</ul>
 	</li>
 </ul>
 
 <hr>
+

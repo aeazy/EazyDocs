@@ -46,9 +46,9 @@ def set_plot_title(self, a: str, text: str, text2: float | int = 1.1) -> None:
     """_summary_
 
     Args:
-        a (str): String.
+        a (str): String expression representing plot.
         text (str): String expression representing the plot title. Defaults to None.
-        text2 (float | int, optional): description. Defaults to 1.1.
+        text2 (float | int, optional): _description_. Defaults to 1.1.
     """
 
     ...

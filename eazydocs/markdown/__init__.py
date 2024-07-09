@@ -18,4 +18,5 @@ def get_methods(filename: str, filepath: str | Path = None) -> dict:
     return methods
 
 def update_md_file(cls_or_method: object, filename: str, filepath: str | Path = None) -> None:
-    updater = Updater(cls_or_method, filename,filepath)
+    Updater(cls_or_method, filename,filepath)
+    

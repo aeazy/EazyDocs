@@ -26,6 +26,9 @@ class Updater:
         self._get_current_docs()
 
         if isclass(cls_or_method):
+            raise NotImplementedError(
+                "Use the create_md_file method to update docs for an entire class"
+            )
             self.arg = Cls(cls_or_method)
             self.update_file()
         elif isfunction(cls_or_method) or ismethod(cls_or_method):
@@ -33,17 +36,21 @@ class Updater:
             self._update_method()
 
     def update_file(self) -> None:
-        pass
+        for method in self.arg.methods:
+            start, end = self._find_method_docs(method.name)
+            print(start, end)
+        # for each method - find <strong
+        # then find next method
 
     def _update_method(self) -> None:
+        generator = Generator(self.arg)
+        docs = generator.docs
+
         if self._is_new_method(self.arg.name):
-            generator = Generator(self.arg)
-            docs = generator.docs
             new_docs = f"{self.current_docs}\n{docs}"
             self._create_markdown(new_docs)
-
-        for param in self.arg.params:
-            print(param.name)
+        else:
+            self._trim_old_method(self.arg.name, docs)
 
     def _get_current_docs(self) -> None:
         with Reader(self.filename) as f:
@@ -60,3 +67,22 @@ class Updater:
     def _create_markdown(self, contents: str) -> None:
         writer = Writer(contents, self.filename)
         writer.write()
+
+    def _trim_old_method(self, method: str, method_docs: str) -> str:
+        start, end = self._find_method_docs(method)
+        before, after = self._get_before_after_docs(start, end)
+        new_docs = f"{before}\n\n{method_docs}\n{after}"
+
+        self._create_markdown(new_docs)
+
+    def _find_method_docs(self, method: str) -> tuple[int, int]:
+        start = self.current_docs.find(method) - (len(method) + 14)
+        end = self.current_docs[start:].find("<hr>") + 4
+
+        return (start, end)
+
+    def _get_before_after_docs(self, start: int, end: int) -> tuple[str, str]:
+        before = self.current_docs[:start].strip()
+        after = self.current_docs[(start + end) :].strip()
+
+        return (before, after)
