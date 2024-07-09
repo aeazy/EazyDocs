@@ -12,8 +12,7 @@ class Example:
         """Example method for <class Example>.
 
         Args:
-            param (list): Example required argument.
-                If `param=None` then...
+            param (list): Example required argument. If `param=None` then... else if `param=[]` then...
             param2 (str, optional): Example default None argument. Defaults to None.
             param3 (str, optional): Example default str argument. Defaults to "Test".
         """

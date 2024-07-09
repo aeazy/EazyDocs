@@ -1,26 +1,24 @@
 from inspect import Parameter, _empty
-from re import match, Match
+from re import match
 from types import UnionType
 
 
 class Param:
-    def __init__(self, s: Match[str] | Parameter | tuple) -> None:
+    def __init__(self, s: Parameter | tuple) -> None:
         self.s = s
 
-        if isinstance(s, Match):
+        if isinstance(s, tuple):
             self._from_match()
         elif isinstance(s, Parameter):
             self._from_signature()
-        elif isinstance(s, tuple):
-            self._from_dict()
 
     def _from_match(self) -> None:
         # param.name
-        self.name = self.s.group(1)
+        self.name = self.s[0]
         # param.arg_type
-        self.arg_type = self.s.group(2).replace(", optional", "")
+        self.arg_type = self.s[1].replace(", optional", "")
         # param.default_arg & param.description
-        arg = self.s.group(3)
+        arg = self.s[2]
         default_arg = match(r"(.+) Defaults to (.+).", arg)
 
         if default_arg:
@@ -51,12 +49,12 @@ class Param:
 
     def _from_dict(self) -> None:
         self.name = self.s[0]
-        
+
         d: dict = self.s[1]
-        
-        self.arg_type = d['arg_type']
-        self.default_arg = d['default_arg']
-        self.description = d['description']
+
+        self.arg_type = d["arg_type"]
+        self.default_arg = d["default_arg"]
+        self.description = d["description"]
 
     # def __repr__(self) -> str:
     #     return f"name: {self.name}\narg_type: {self.arg_type}\ndefault_arg: {self.default_arg}\ndescription: {self.description}"

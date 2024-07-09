@@ -24,17 +24,8 @@ class Method:
                 self._from_docstring()
 
     def _from_docstring(self) -> None:
-        args_start = self.docstring.find("Args:")
-        args = self.docstring[args_start:].replace("Args:", "").strip()
-        args = args.split("\n")
-
-        # for arg in args:
-        # arg = arg.strip()
-        param = findall(r"(\b\w+) \((.+)\): (.+)", args)
-
-        if param is not None:
-            print(param.groups())
-            
+        params = findall(r"(\b\w+) \((.+)\): (.+)", self.docstring)
+        for param in params:
             self.params.append(Param(param))
 
     def _from_signature(self) -> None:

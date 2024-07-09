@@ -5,7 +5,8 @@ from eazydocs.core.common import check_filename, set_path
 from eazydocs.core import Cls, Generator, Method, Param
 
 from .reader import Reader
-from .md_method import MDMethod
+from .parser import Parser
+from .writer import Writer
 
 
 class Updater:
@@ -15,10 +16,6 @@ class Updater:
         filename: str,
         filepath: str | Path = None,
     ) -> None:
-        if isclass(cls_or_method):
-            self.arg = Cls(cls_or_method)
-        elif isfunction(cls_or_method) or ismethod(cls_or_method):
-            self.arg = Method(cls_or_method)
         filename = check_filename(filename)
 
         if filepath is not None:
@@ -26,61 +23,40 @@ class Updater:
 
         self.filename = filename
 
-        self.update()
+        self._get_current_docs()
 
-    def update(self) -> None:
+        if isclass(cls_or_method):
+            self.arg = Cls(cls_or_method)
+            self.update_file()
+        elif isfunction(cls_or_method) or ismethod(cls_or_method):
+            self.arg = Method(cls_or_method)
+            self._update_method()
+
+    def update_file(self) -> None:
+        pass
+
+    def _update_method(self) -> None:
+        if self._is_new_method(self.arg.name):
+            generator = Generator(self.arg)
+            docs = generator.docs
+            new_docs = f"{self.current_docs}\n{docs}"
+            self._create_markdown(new_docs)
+
+        for param in self.arg.params:
+            print(param.name)
+
+    def _get_current_docs(self) -> None:
         with Reader(self.filename) as f:
-            contents = f.contents
+            self.current_docs = f.contents
 
-        self._get_current_methods(contents)
+        parser = Parser(self.current_docs)
+        self.current_methods = parser.methods
 
-        if isinstance(self.arg, Cls):
-            self._get_description(self.arg.name, self.arg.params)
-            # cls_params = self.arg.params
-            # for param in cls_params:
-            #     print(param.name)
-            # for method in self.arg.methods:
-            #     print(method.name)
+    def _is_new_method(self, method: str) -> bool:
+        if self.current_methods.get(method) is None:
+            return True
+        return False
 
-    # def _get_description(self, name: str, params: list[Param]) -> str:
-    #     records: dict = self.current_methods.get(name)[name]
-
-    #     params = [param.name for param in params]
-
-    #     # for param in params:
-    #     #     current_description: str = records.get(param)["description"]
-    #     #     if description == "_description_":
-    #     for param in self.arg.params:
-    #         if param.description == "_description_":
-    #             current_description = records.get(param.name)
-    #             print(current_description)
-    #         # if p.name == param:
-    #         #     p.description = "new description"
-
-    #     g = Generator(self.arg)
-    #     # print(g.docs)
-
-    # def _get_current_methods(self, docs: str) -> None:
-    #     methods: dict[str:MDMethod] = dict()
-
-    #     docs = docs.split("<strong")
-    #     for doc in docs:
-    #         if doc.lstrip().startswith("id"):
-    #             method = MDMethod(doc)
-    #             methods.update({method.name: method.params})
-
-    #     self.current_methods = methods
-
-    #     # for doc in methods:
-    #     #     method = self._convert_method(doc)
-
-    # def _convert_method(self, arg: MDMethod) -> Method:
-    #     method = Method()
-    #     method.name = arg.name
-
-    #     for key, params in arg.params.items():
-    #         for item in params.items():
-    #             param = Param(item)
-    #             method.params.append(param)
-
-    #     return method
+    def _create_markdown(self, contents: str) -> None:
+        writer = Writer(contents, self.filename)
+        writer.write()

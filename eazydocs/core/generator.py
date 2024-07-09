@@ -76,6 +76,8 @@ class Generator:
         return default_arg
 
     def _append_param(self, param: Param) -> None:
+        description = self._check_description(param.description)
+
         template = f"<ul style='list-style: none'>\n\t<li id='{self.method}-{param.name}'>\n"
 
         if param.default_arg is None:
@@ -85,15 +87,24 @@ class Generator:
         else:
             template += f"\t\t<b>{param.name} : <i>{param.arg_type}, default {param.default_arg}</i></b>\n"
 
-        template += f"\t\t<ul style='list-style: none'>\n\t\t\t<li id='{self.method}-{param.name}-description'>{param.description}</li>\n\t\t</ul>\n\t</li>\n</ul>\n"
+        template += f"\t\t<ul style='list-style: none'>\n\t\t\t<li id='{self.method}-{param.name}-description'>{description}</li>\n\t\t</ul>\n\t</li>\n</ul>\n"
 
         self.parameters += template
+
+    def _check_description(self, string: str) -> str:
+        if "`" in string:
+            while "`" in string:
+                string = string.replace("`", "<code>", 1).replace(
+                    "`", "</code>", 1
+                )
+
+        return string
 
     def _get_docs(self) -> None:
         docs = str()
         docs += self._get_function()
         docs += self.parameters
-        docs += "\n<hr>\n\n"
+        docs += "\n<hr>\n"
         return docs
 
     def _get_table_of_contents(self) -> str:
