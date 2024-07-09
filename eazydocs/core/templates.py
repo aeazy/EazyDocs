@@ -5,11 +5,3 @@ DEFAULT_ARG_TEMPLATE = """    <li>
         </ul>
     </li>
 """
-
-TEMPLATE = """    <li>
-        <b>{name} : <i>{type}</i></b>
-        <ul style='list-style: none'>
-            <li>{description}</li>
-        </ul>
-    </li>
-"""

@@ -42,11 +42,16 @@ def make_subplot(
     ...
 
 
-def set_plot_title(self, text: str, text2: float | int = 1.1) -> None:
+def set_plot_title(self, a: str, text: str, text2: float | int = 1.1) -> None:
     """_summary_
 
     Args:
-        text (str): _description_
+        a (str): String.
+        text (str): String expression representing the plot title. Defaults to None.
+        text2 (float | int, optional): description. Defaults to 1.1.
     """
 
     ...
+
+
+def no_docstring(text: str) -> None: ...

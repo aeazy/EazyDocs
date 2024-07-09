@@ -1,4 +1,4 @@
-class Param:
+class MDParam:
     def __init__(self, param: str) -> None:
         self.parse_param(param)
 
@@ -27,9 +27,4 @@ class Param:
 
     def _set_default_arg(self, arg: str) -> None:
         arg = arg.replace("default", "").strip()
-        # try:
-        #     if "int" in self.arg_type:
-        #         arg = int(arg)
-        # except ValueError:
-        #     arg = float(arg)
         self.default_arg = arg

@@ -1,9 +1,9 @@
 from collections import defaultdict
 
-from .param import Param
+from .md_param import MDParam
 
 
-class Method:
+class MDMethod:
     def __init__(self, method: str) -> None:
         self.params = defaultdict(list)
 
@@ -22,7 +22,7 @@ class Method:
         while self.method:
             line = self.method.pop(0)
 
-            if "<strong id=" in line:
+            if line.startswith("id"):
                 line = line.split(">")
                 name = line[1].split("<")[0]
                 self.name = name
@@ -37,14 +37,15 @@ class Method:
                 line = self.method.pop(0)
 
                 if self._is_param(line):
-                    param = Param(line)
+                    param = MDParam(line)
                     name = param.name
 
                     description = self._parse_description()
                     self.params[self.name].update(
-                        {f"{name}":dict(
+                        {
+                            f"{name}": dict(
                                 arg_type=param.arg_type,
-                                default_arg = param.default_arg,
+                                default_arg=param.default_arg,
                                 description=description,
                             )
                         }
@@ -62,3 +63,6 @@ class Method:
         description = line.split("<li>")[-1]
         description = description.replace("</li>", "")
         return description
+
+    def __repr__(self) -> str:
+        return f"name: {self.name}\nparams: {self.params}"
