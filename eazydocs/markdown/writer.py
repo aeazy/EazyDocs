@@ -6,7 +6,10 @@ from eazydocs.core.common import check_filename, set_path
 
 class Writer:
     def __init__(
-        self, contents: str|Generator, filename: str, filepath: str | Path = None
+        self,
+        contents: str | Generator,
+        filename: str,
+        filepath: str | Path = None,
     ) -> None:
         filename = check_filename(filename)
 
@@ -19,15 +22,12 @@ class Writer:
             filename = Path(filename)
 
         self.filename = filename
-        
+
         if isinstance(contents, Generator):
             contents = contents.docs
-        
-        self.contents = contents
 
-    def write(self) -> None:
-        with open(self.filename, "w") as f:
-            f.write(self.contents)
-            
-        print(f"Success! See the file here: {self.filename}")
+        self.write(contents, filename)
 
+    def write(self, contents: str, filename: Path) -> None:
+        with open(filename, "w") as f:
+            f.write(contents)

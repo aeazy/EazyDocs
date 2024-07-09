@@ -1,8 +1,7 @@
 ## Example
 
 - [Parameters](#Example)
-- Methods:
-	- [example_method](#example-method)
+- Methods: - [example_method](#example-method)
 
 <strong id='Example'>Example</strong>(<b>val</b>, <b>string</b><i>=Test</i>, <b>num</b>)
 
@@ -65,7 +64,7 @@
 
 <hr>
 
-<strong id='set-plot-title'>set_plot_title</strong>(<b>a</b>, <b>text</b><i>=_NoDefault.no_default</i>, <b>text2</b><i>=1.1</i>)
+<strong id='set-plot-title'>set_plot_title</strong>(<b>a</b>, <b>text</b><i>=\_NoDefault.no_default</i>, <b>text2</b><i>=1.1</i>)
 
 > Parameters
 
@@ -91,8 +90,5 @@
 		<ul style='list-style: none'>
 			<li id='set_plot_title-text2-description'>_description_.</li>
 		</ul>
-	</li>
 </ul>
-
 <hr>
-

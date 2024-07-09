@@ -12,6 +12,8 @@ filepath = "C:/Software/EazyDocs-v2/eazydocs/tests"
 
 # create_md_file(Example)
 
-r = update_md_file(Example, "readme")
+# r = update_md_file(Example, "readme")
 
-# print(parser.methods)
+s = read_md_file("readme")
+parser = Parser(s)
+print(parser.methods)
