@@ -1,4 +1,5 @@
 from pathlib import Path
+from subprocess import run
 
 from .generator import Generator
 from .cls import Cls
@@ -28,3 +29,13 @@ def update_md_file(
     filepath: str | Path = None,
 ) -> Generator:
     Updater(cls_or_method, filename, filepath)
+
+
+def get_method_docs(method: object, to_clipboard: bool = False) -> str:
+    method = Method(method)
+    generator = Generator(method)
+
+    if to_clipboard:
+        run(["clip.exe"], input=generator.docs.strip().encode("utf-8"))
+
+    return generator.docs

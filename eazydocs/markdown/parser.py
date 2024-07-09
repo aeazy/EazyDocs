@@ -3,14 +3,15 @@ from re import findall
 
 class Parser:
     """eazydocs.markdown.Parser
-    
-    Parses a markdown file into its methods and their params. The format of 
+
+    Parses a markdown file into its methods and their params. The format of
     this markdown file is as defined by eazydocs.markdown.format.
 
     Args:
         string (str): String expression representing contents of a markdown file.
             This argument can be obtained using the method `read_md_file`
     """
+
     def __init__(self, string: str) -> None:
 
         self.string = string
@@ -49,5 +50,7 @@ class Parser:
             description = findall(rf"{param}-description'>(.+)\.", self.string)
             if description != []:
                 params.update({param: description[0]})
+            else:
+                params.update({param: None})
 
         return params

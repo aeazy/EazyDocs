@@ -1,4 +1,9 @@
-from eazydocs import update_md_file, read_md_file, create_md_file
+from eazydocs import (
+    update_md_file,
+    read_md_file,
+    create_md_file,
+    get_method_docs,
+)
 from eazydocs.tests.example_methods import (
     set_plot_title,
     no_docstring,
@@ -14,6 +19,4 @@ filepath = "C:/Software/EazyDocs-v2/eazydocs/tests"
 
 # r = update_md_file(Example, "readme")
 
-s = read_md_file("readme")
-parser = Parser(s)
-print(parser.methods)
+get_method_docs(set_plot_title, True)
