@@ -19,5 +19,5 @@ filepath = "C:/Software/EazyDocs-v2/eazydocs/tests"
 
 # r = update_md_file(Example, "readme")
 
-g = get_method_docs(set_plot_title, True)
+g = get_method_docs(set_plot_title, False)
 print(g)

@@ -1,5 +1,5 @@
 from inspect import signature
-from re import match,findall
+from re import match, findall, DOTALL
 from types import FunctionType
 
 from .param import Param
@@ -24,6 +24,7 @@ class Method:
                 self._from_docstring()
 
     def _from_docstring(self) -> None:
+        self._get_summary()
         params = findall(r"(\b\w+) \((.+)\): (.+)", self.docstring)
         for param in params:
             self.params.append(Param(param))
@@ -37,3 +38,18 @@ class Method:
 
     def __repr__(self) -> str:
         return f"name:{self.name}\nparams: {self.params}"
+
+    def _get_summary(self) -> None:
+        regex: str = findall(r"(.*)Args:", self.docstring, DOTALL)[0]
+        regex = regex.strip()
+
+        if regex == "":
+            summary = None
+        elif "\n" in regex:
+            regex = regex.split("\n")
+            regex = [rgx.strip() for rgx in regex]
+            summary = " ".join(regex)
+        else:
+            summary = regex
+
+        self.summary = summary

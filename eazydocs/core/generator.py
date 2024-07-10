@@ -65,7 +65,7 @@ class Generator:
 
         return template
 
-    def _get_default_arg(self, arg: str) -> str:
+    def _get_default_arg(self, arg: str | None) -> str:
         if arg is None:
             default_arg = None
         elif arg == "None":
@@ -103,6 +103,7 @@ class Generator:
     def _get_docs(self) -> None:
         docs = str()
         docs += self._get_function()
+        docs += f"\n{self.arg.summary}\n"
         docs += self.parameters
         docs += "\n<hr>\n"
         return docs

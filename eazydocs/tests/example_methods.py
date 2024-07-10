@@ -44,6 +44,7 @@ def make_subplot(
 
 def set_plot_title(self, a: str, text: str, text2: float | int = 1.1) -> None:
     """_summary_
+    test
 
     Args:
         a (str): String expression representing plot.

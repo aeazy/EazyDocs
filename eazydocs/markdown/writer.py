@@ -11,6 +11,8 @@ class Writer:
         filename: str,
         filepath: str | Path = None,
     ) -> None:
+        self.contents = contents
+
         filename = check_filename(filename)
 
         if filepath is not None:
@@ -26,8 +28,6 @@ class Writer:
         if isinstance(contents, Generator):
             contents = contents.docs
 
-        self.write(contents, filename)
-
-    def write(self, contents: str, filename: Path) -> None:
-        with open(filename, "w") as f:
-            f.write(contents)
+    def write(self) -> None:
+        with open(self.filename, "w") as f:
+            f.write(self.contents)
