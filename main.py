@@ -3,6 +3,7 @@ from eazydocs import (
     read_md_file,
     create_md_file,
     get_method_docs,
+    get_method_link,
 )
 from eazydocs.tests.example_methods import (
     set_plot_title,
@@ -19,5 +20,5 @@ filepath = "C:/Software/EazyDocs-v2/eazydocs/tests"
 
 # r = update_md_file(Example, "readme")
 
-g = get_method_docs(set_plot_title, False)
+g = get_method_link(set_plot_title)
 print(g)

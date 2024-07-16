@@ -20,3 +20,4 @@ def get_methods(filename: str, filepath: str | Path = None) -> dict:
 def update_md_file(cls_or_method: object, filename: str, filepath: str | Path = None) -> None:
     Updater(cls_or_method, filename,filepath)
     
+    

@@ -120,3 +120,8 @@ class Generator:
         table_of_contents += "\n"
 
         return table_of_contents
+
+    @property
+    def link(self) -> str:
+        template = f"[`{self.arg.name}`](#{self.arg.id})"
+        return template
