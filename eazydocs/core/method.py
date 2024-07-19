@@ -15,11 +15,13 @@ class Method:
 
             self.name = method.__name__
             self.id = self.name.replace("_", "-")
+            self.summary = None
 
             self.output = None
 
             if self.docstring is None:
                 self._from_signature()
+                print("fromsig")
             else:
                 self._from_docstring()
 
@@ -43,13 +45,13 @@ class Method:
         regex: str = findall(r"(.*)Args:", self.docstring, DOTALL)[0]
         regex = regex.strip()
 
-        if regex == "":
-            summary = None
-        elif "\n" in regex:
+        if "\n" in regex:
             regex = regex.split("\n")
             regex = [rgx.strip() for rgx in regex]
             summary = " ".join(regex)
-        else:
+        elif regex != "":
             summary = regex
+        else:
+            summary = None
 
         self.summary = summary
