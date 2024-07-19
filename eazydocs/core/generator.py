@@ -114,7 +114,7 @@ class Generator:
 
         for method in self.table_of_contents:
             name = method.replace("-", "_")
-            link = f"\t- [{name}](#{method})\n"
+            link = f"  - [{name}](#{method})\n"
             table_of_contents += link
 
         table_of_contents += "\n"
