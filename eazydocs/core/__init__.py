@@ -80,6 +80,7 @@ def get_method_docs(method: object, to_clipboard: bool = True) -> str:
 
     if to_clipboard:
         run(["clip.exe"], input=generator.docs.strip().encode("utf-8"))
+        print(f"'{method.name}' docs copied to clipboard")
 
     return generator.docs
 
@@ -91,5 +92,6 @@ def get_method_link(method: object, to_clipboard: bool = True) -> str:
 
     if to_clipboard:
         run(["clip.exe"], input=link.strip().encode("utf-8"))
+        print(f"'{method.name}' link copied to clipboard")
 
     return link
