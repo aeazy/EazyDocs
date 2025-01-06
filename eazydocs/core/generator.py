@@ -1,127 +1,78 @@
-from .cls import Cls
-from .method import Method
-from .param import Param
+from types import FunctionType
+from typing import Optional
+
+from eazydocs.core import ClassType, MethodType
 
 
 class Generator:
-    def __init__(self, arg: Cls | Method) -> None:
-        self.arg = arg
+    def __init__(
+        self,
+        class_or_method: object | FunctionType,
+        include_methods: Optional[bool] = True,
+        include_private_methods: Optional[bool] = False,
+        include_examples: Optional[bool] = True,
+    ):
 
-        self.parameters = "\n> Parameters\n\n"
-        self.docs = str()
-        self.table_of_contents: list[str] = list()
-        self.method = arg.name
+        if isinstance(class_or_method, FunctionType):
+            # Pass to Method class to parse and return docstring
+            parser = MethodType(
+                class_or_method,
+                include_examples=include_examples,
+            )
+        elif isinstance(class_or_method, type):
+            # Assume class is passed
+            parser = ClassType(
+                class_or_method,
+                include_methods=include_methods,
+                include_private_methods=include_private_methods,
+                include_examples=include_examples,
+            )
 
-        self.get_docs()
+        self.output = parser.format_docs()
 
-    def get_docs(self) -> None:
-        docs = str()
-        if isinstance(self.arg, Cls):
-            docs += f"## {self.arg.name}\n\n"
+    def __repr__(self):
+        return self.output
 
-            if self.arg.methods is not None:
-                method_docs = str()
-                while self.arg.methods:
-                    method: Method = self.arg.methods.pop(0)
-                    self.table_of_contents.append(method.id)
-                    generator = Generator(method)
-                    method_docs += generator.docs
+    def create_md_file(self, filename="README.md"):
+        if not filename.endswith(".md"):
+            filename = f"{filename}.md"
 
-                docs += self._get_table_of_contents()
-                docs += self._get_docs()
-                docs += method_docs
-            else:
-                docs += self._get_docs()
-        else:
-            docs += self._get_docs()
+        with open(filename, "w") as f:
+            f.write(self.output)
 
-        self.docs = docs
+        return f"Successfully created {filename}"
 
-    def _get_function(self) -> str:
-        template = "<strong id='{method_id}'>{method}</strong>("
-        template = template.replace("{method_id}", self.arg.id).replace(
-            "{method}", self.arg.name
-        )
-        while self.arg.params:
-            param = self.arg.params.pop(0)
-            # append to Parameters section
-            self._append_param(param)
-            # fmt param for function
-            param = self._fmt_param(param)
-            template += param
 
-        template = template.rstrip(", ") + ")\n"
+def generate_md_file(
+    class_or_method: object | FunctionType,
+    filename: str = "README.md",
+    include_methods: Optional[bool] = True,
+    include_private_methods: Optional[bool] = False,
+    include_examples: Optional[bool] = True,
+) -> None:
+    """Generate a markdown file for a class or method.
 
-        return template
+    Args:
+        class_or_method (object | FunctionType): Class or method to generate
+            documentation for. If a class is passed, all methods will be
+            included in the documentation.
+        filename (str, optional): Filename to save the markdown file. Defaults
+            to "README.md".
+        include_methods (Optional[bool], optional): Whether or not methods are
+            included if `class_or_method` argument is a class type. Defaults to
+            True.
+        include_private_methods (Optional[bool], optional): Whether or not
+            private methods are included if `class_or_method` argument is a
+            class type. Defaults to True. Defaults to False.
+        include_examples (Optional[bool], optional): Include examples if found
+            in the method docstring. Defaults to True.
+    """
 
-    def _fmt_param(self, param: Param) -> str:
-        name = param.name
-        default_arg = self._get_default_arg(param.default_arg)
+    generator = Generator(
+        class_or_method=class_or_method,
+        include_methods=include_methods,
+        include_private_methods=include_private_methods,
+        include_examples=include_examples,
+    )
 
-        if default_arg is not None:
-            template = f"<b>{name}</b><i>={default_arg}</i>, "
-        else:
-            template = f"<b>{name}</b>, "
-
-        return template
-
-    def _get_default_arg(self, arg: str | None) -> str:
-        if arg is None:
-            default_arg = None
-        elif arg == "None":
-            default_arg = "_NoDefault.no_default"
-        else:
-            default_arg = arg
-
-        return default_arg
-
-    def _append_param(self, param: Param) -> None:
-        description = self._check_description(param.description)
-
-        template = f"<ul style='list-style: none'>\n\t<li id='{self.method}-{param.name}'>\n"
-
-        if param.default_arg is None:
-            template += f"\t\t<b>{param.name} : <i>{param.arg_type}</i></b>\n"
-        elif param.default_arg == "None":
-            template += f"\t\t<b>{param.name} : <i>{param.arg_type}, optional</i></b>\n"
-        else:
-            template += f"\t\t<b>{param.name} : <i>{param.arg_type}, default {param.default_arg}</i></b>\n"
-
-        template += f"\t\t<ul style='list-style: none'>\n\t\t\t<li id='{self.method}-{param.name}-description'>{description}</li>\n\t\t</ul>\n\t</li>\n</ul>\n"
-
-        self.parameters += template
-
-    def _check_description(self, string: str) -> str:
-        if "`" in string:
-            while "`" in string:
-                string = string.replace("`", "<code>", 1).replace(
-                    "`", "</code>", 1
-                )
-
-        return string
-
-    def _get_docs(self) -> None:
-        docs = str()
-        docs += self._get_function()
-        docs += f"\n{self.arg.summary}\n"
-        docs += self.parameters
-        docs += "\n<hr>\n"
-        return docs
-
-    def _get_table_of_contents(self) -> str:
-        table_of_contents = f"- [Parameters](#{self.arg.name})\n"
-        table_of_contents += "- Methods:\n"
-
-        for method in self.table_of_contents:
-            name = method.replace("-", "_")
-            link = f"  - [{name}](#{method})\n"
-            table_of_contents += link
-
-        table_of_contents += "\n"
-
-        return table_of_contents
-
-    @property
-    def link(self) -> str:
-        template = f"[`{self.arg.name}`](#{self.arg.id})"
-        return template
+    generator.create_md_file(filename=filename)
