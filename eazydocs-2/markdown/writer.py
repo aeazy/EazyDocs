@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from eazydocs.core import Generator
+from eazydocs.core.generator import Generator
 from eazydocs.core.common import check_filename, set_path
 
 
@@ -18,20 +18,16 @@ class Writer:
         if filepath is not None:
             if isinstance(filepath, str):
                 filepath = Path(filepath)
-            path = filepath.joinpath(filename)
-        else:
-            path = Path(filename)
 
-        self.path = path
+            filename = filepath.joinpath(filename)
+        else:
+            filename = Path(filename)
+
+        self.filename = filename
 
         if isinstance(contents, Generator):
             contents = contents.docs
 
     def write(self) -> None:
-        try:
-            with open(self.path, "w") as f:
-                f.write(self.contents)
-        except FileNotFoundError:
-            self.path.parent.mkdir(parents=True, exist_ok=True)
-            with open(self.path, "w") as f:
-                f.write(self.contents)
+        with open(self.filename, "w") as f:
+            f.write(self.contents)
