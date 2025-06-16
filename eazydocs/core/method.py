@@ -1,6 +1,7 @@
 from collections import defaultdict
 import re
 from subprocess import run
+from types import FunctionType
 from typing import Any, Optional
 from eazydocs.core._parser import _Parser
 from eazydocs.core._templates import (
@@ -11,8 +12,8 @@ from eazydocs.core._templates import (
 from eazydocs.core._types import ArgsTuple, ParamsDict
 
 
-class MethodType(metaclass=_Parser):
-    """EazyDocs MethodType class.
+class Method(metaclass=_Parser):
+    """EazyDocs Method class.
 
     This class is used to parse the docstring of a method and extract
     information such as arguments, examples, and parameters. It is designed
@@ -59,7 +60,7 @@ class MethodType(metaclass=_Parser):
             2025-01-01 02:00:00    0.0   0.0
             ...
 
-        >>> MethodType(example_method).parse()
+        >>> Method(example_method).parse()
         <strong id='example'>Example</strong>(<b>param</b>=<i>None</i>, <b>param2</b>=<i>None</i>, <b>param3</b>=<i>"Test"</i>)
 
         Example method for <class Example>.
@@ -112,7 +113,7 @@ class MethodType(metaclass=_Parser):
     """
 
     def __init__(self, method: object, include_examples: bool = True) -> None:
-        """Initializes the MethodType instance.
+        """Initializes the Method instance.
 
         Args:
             method (object): The method to be parsed. It should have a docstring
@@ -120,12 +121,10 @@ class MethodType(metaclass=_Parser):
             include_examples (bool, optional): Whether to include examples in
                 the documentation. Defaults to True.
         """
-        self.docstring = method.__doc__
+
+        self.method = method
         self.docstring_split = self.docstring.split("\n")
         self.include_examples = include_examples
-
-        self.name = method.__name__
-        self.id = self._get_id()
 
     def parse(self, to_clipboard: bool = True) -> str:
         """Parse the docstring of the method to extract arguments, examples,
@@ -144,6 +143,16 @@ class MethodType(metaclass=_Parser):
                 f"{self.method} does not have a docstring, or is using an unsupported format. Ensure the method has a docstring formatted according to Google's style guide."
             )
 
+        output = self._get_documentation()
+
+        if to_clipboard:
+            run(["clip.exe"], input=output.encode("utf-8"))
+            print("Successfully copied to clipboard!")
+
+        return output
+
+    def _get_documentation(self) -> str:
+        """Generates the documentation for the method."""
         output = f"{self.function}\n\n"
         output += f"{self.summary}\n\n"
         if self.args is not None:
@@ -152,10 +161,6 @@ class MethodType(metaclass=_Parser):
             output += f"> Examples:\n{self.examples}"
 
         output += "\n<hr>\n"
-
-        if to_clipboard:
-            run(["clip.exe"], input=output.encode("utf-8"))
-            print("Successfully copied to clipboard!")
 
         return output
 
@@ -406,10 +411,6 @@ class MethodType(metaclass=_Parser):
         """The docstring of the method."""
         return self.method.__doc__
 
-    @docstring.setter
-    def docstring(self, val: str) -> None:
-        self._docstring = val
-
     @property
     def docstring_split(self) -> list[str] | None:
         """Split the docstring into a list of lines."""
@@ -438,12 +439,23 @@ class MethodType(metaclass=_Parser):
         self._function = val
 
     @property
-    def name(self) -> str:
-        return self._name
+    def id(self) -> str:
+        """The ID of the method, used for HTML element IDs."""
+        return self.name.replace("_", "-").lower()
 
-    @name.setter
-    def name(self, val: str) -> None:
-        self._name = val
+    @property
+    def method(self) -> object:
+        """The method object that this Method represents."""
+        return self._method
+
+    @method.setter
+    def method(self, val: object) -> None:
+        self._method = val
+
+    @property
+    def name(self) -> str:
+        """The name of the method."""
+        return self.method.__name__
 
     @property
     def params(self) -> defaultdict[Any, ParamsDict]:

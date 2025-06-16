@@ -1,5 +1,5 @@
 class Example:
-    """Example method for <class Example>.
+    """Example method for `Example` class.
 
     Args:
         param (list): Example required argument. If `param=None` then... else if
@@ -31,6 +31,15 @@ class Example:
     def __init__(
         self, val: str, string: str = "Test", num: int | float = None
     ) -> None:
+        """Example initialization method for `Example` class.
+
+        Args:
+            val (str): Example required argument.
+            string (str, optional): Example default string argument. Defaults to
+                "Test".
+            num (int | float, optional): Example default number argument.
+                Defaults to None.
+        """
         self.val = val
         self.string = string
         self.num = num
@@ -51,10 +60,28 @@ class Example:
         Examples:
         Read
 
-        >>> d
+            >>> d
         """
 
         pass
 
+    def example_method2(
+        self, param: list, param2: str = None, param3: str = "Test"
+    ) -> None:
+        """Example method2 for <class Example>.
 
-from pandas import DataFrame
+        Args:
+            param (list): Example required argument. If `param=None` then...
+                else if `param=[]` then...
+            param2 (str, optional): Example default None argument. Defaults to
+                None.
+            param3 (str, optional): Example default str argument. Defaults to
+                "Test".
+
+        Examples:
+        Read
+
+            >>> d
+        """
+
+        pass

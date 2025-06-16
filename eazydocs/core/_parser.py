@@ -6,45 +6,41 @@ class _Parser(type):
     used in the MethodType class to create an instance with the parsed method.
     """
 
-    def __call__(self, *args, **kwds):
-        """The metaclass for the MethodType class.
+    def __call__(self, *args, **kwargs):
+        """The metaclass for the ClassType and MethodType classes.
 
         This metaclass is used to create a new instance of the class and set the
         attributes based on the provided keyword arguments.
 
-        A single argument is expected, which is the method to be parsed.
+        A single argument is expected, which is the class/method to be parsed.
 
         Raises:
-            TypeError: If no arguments are provided to the MethodType class.
+            TypeError: If no arguments are provided to the metaclass.
 
         Returns:
-            MethodType: An instance of the MethodType class with the parsed
-                method.
-
-        Notes:
-            - The method should be a callable object, such as a function or a
-            method, and it should have a docstring that follows the expected
-            format for parsing arguments, parameters, and examples.
-            - An instance of MethodType is created with the parsed method,
-            and its attributes such as `args`, `params`, `examples`, and
-            `args_fmtd` are set based on the parsed information from the
-            method's docstring.
+            ClassType|MethodType: An instance of the class or method type
+            with parsed attributes.
         """
         if args is None:
-            raise TypeError("MethodType requires a method as an argument.")
-        
+            raise TypeError("Parser requires at least one argument.")
+
+        # Get the first argument, which should be a class or method
         arg = args[0]
-        self.method = arg
 
-        from eazydocs.core.method_type import MethodType
+        from eazydocs.core.method import Method
+        from eazydocs.core.class_type import ClassType
 
-        instance: MethodType = super().__call__(*args, **kwds)
+        instance = super().__call__(*args, **kwargs)
 
-        instance.summary = instance._get_summary()
-        instance.args = instance._get_args()
-        instance.params = instance._get_params()
-        instance.function = instance._get_function_signature()
-        instance.examples = instance._get_examples()
-        instance.args_fmtd = instance._format_args()
+        if isinstance(instance, Method):
+            instance.summary = instance._get_summary()
+            instance.args = instance._get_args()
+            instance.params = instance._get_params()
+            instance.function = instance._get_function_signature()
+            instance.examples = instance._get_examples()
+            instance.args_fmtd = instance._format_args()
+        elif isinstance(instance, ClassType):
+            instance.cls = arg
+            instance.__parse__()
 
         return instance

@@ -1,5 +1,4 @@
-from eazydocs.core.method_type import MethodType
-
+from eazydocs.core.class_type import ClassType
 from eazydocs.tests.example_class import Example
 from eazydocs.tests.example_methods import (
     set_plot_title,
@@ -7,8 +6,7 @@ from eazydocs.tests.example_methods import (
     make_subplot,
 )
 
-method = MethodType(Example)
 
-# print(method.__dict__.keys())
-# print(method)
-method.parse()
+cls = ClassType(Example)
+cls.parse()
+# print(cls.output)
