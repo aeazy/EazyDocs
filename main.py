@@ -1,24 +1,14 @@
-from eazydocs import (
-    update_md_file,
-    read_md_file,
-    create_md_file,
-    get_method_docs,
-    get_method_link,
-)
+from eazydocs.core.method_type import MethodType
+
+from eazydocs.tests.example_class import Example
 from eazydocs.tests.example_methods import (
     set_plot_title,
     no_docstring,
     make_subplot,
 )
-from eazydocs.tests.example_class import Example
 
-from eazydocs.markdown import Parser
+method = MethodType(Example)
 
-filepath = "C:/Software/EazyDocs-v2/eazydocs/tests"
-
-# create_md_file(Example)
-
-# r = update_md_file(Example, "readme")
-
-g = get_method_link(set_plot_title)
-print(g)
+# print(method.__dict__.keys())
+# print(method)
+method.parse()

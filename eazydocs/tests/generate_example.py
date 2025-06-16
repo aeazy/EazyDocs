@@ -1,7 +1,7 @@
 from pandas import DataFrame
 from subprocess import run
 
-from eazydocs import generate_example
+from archive import generate_example
 
 
 def get_dataframe(

@@ -4,3 +4,4 @@ __pycache__
 eazydocs.egg-info
 dist/
 dist.md
+archive/
