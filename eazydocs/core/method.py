@@ -371,9 +371,11 @@ class Method(metaclass=_Parser):
 
         for name, arg in self.params.items():
             default_arg = arg.get("default_value")
+
             if default_arg is None:
                 template = ARG_TEMPLATE_NODEFAULT
                 output += template.format(
+                    method=self.name,
                     name=name,
                     arg_type=arg.get("arg_type"),
                     description=arg.get("description"),
@@ -381,6 +383,7 @@ class Method(metaclass=_Parser):
             else:
                 template = ARG_TEMPLATE
                 output += template.format(
+                    method=self.name,
                     name=name,
                     arg_type=arg.get("arg_type"),
                     default_arg=default_arg,
@@ -456,6 +459,10 @@ class Method(metaclass=_Parser):
     def name(self) -> str:
         """The name of the method."""
         return self.method.__name__
+
+    @name.setter
+    def name(self, val: str) -> None:
+        self._name = val
 
     @property
     def params(self) -> defaultdict[Any, ParamsDict]:

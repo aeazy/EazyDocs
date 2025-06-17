@@ -43,10 +43,11 @@ def get_documentation(
 
 
 def _get_filepath(
-    filename: StrPathType, path: Optional[StrPathType] = None
+    filename: StrPathType,
+    path: Optional[StrPathType] = None,
+    overwrite: bool = False,
 ) -> Path:
     """Get the filepath for the markdown file.
-
 
     Args:
         filename (StrPathType): String or Path object for the filename.
@@ -54,6 +55,8 @@ def _get_filepath(
             saved. If not provided, the file will be saved in the current
             working directory. If provided, the `filename` will be joined to
             `path` argument. Defaults to None.
+        overwrite (bool, optional): If True, the existing file will be
+            overwritten without confirmation. Defaults to False.
 
     Returns:
         Path: The Path object representing the filepath for the markdown file.
@@ -76,7 +79,7 @@ def _get_filepath(
 
     if not filepath.exists():
         filepath.parent.mkdir(parents=True, exist_ok=True)
-    else:
+    elif not overwrite:
         while True:
             confirm = input(
                 f"Filepath '{filepath}' already exists. Do you want to overwrite it? (y/n): "
@@ -98,6 +101,8 @@ def create_md_file(
     class_or_method: ClassMethodType,
     filename: StrPathType = "README.md",
     path: Optional[StrPathType] = None,
+    overwrite: bool = False,
+    **kwargs,
 ) -> None:
     """Generate a markdown file for a class or method.
 
@@ -111,9 +116,11 @@ def create_md_file(
             saved. If not provided, the file will be saved in the current
             working directory. If provided, the `filename` will be joined to
             `path` argument. Defaults to None.
+        overwrite (bool, optional): If True, the existing file will be
+            overwritten without confirmation. Defaults to False.
     """
     # Get the filepath
-    filepath = _get_filepath(filename, path)
+    filepath = _get_filepath(filename, path, overwrite)
     if not filepath:
         return
     # Generate the documentation
@@ -122,4 +129,9 @@ def create_md_file(
     with open(filepath, "w+") as f:
         f.write(docs)
 
-    print(f"Successfully created markdown file: '{filepath}'")
+    # Method to support <eazydocs.Updater>
+    if kwargs:
+        if kwargs.get("update") is not None:
+            print(f"Successfully updated markdown file: '{filepath}")
+    else:
+        print(f"Successfully created markdown file: '{filepath}'")

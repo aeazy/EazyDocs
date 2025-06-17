@@ -15,5 +15,6 @@ class ArgsTuple(NamedTuple):
     description: str
 
 
-ClassMethodType = Union[object, FunctionType, MethodType]
+FunctionMethodType = Union[FunctionType, MethodType]
+ClassMethodType = Union[object, FunctionMethodType]
 StrPathType = Union[str, Path]

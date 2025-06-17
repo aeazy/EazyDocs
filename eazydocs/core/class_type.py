@@ -1,5 +1,5 @@
 from inspect import getmembers, isfunction, ismethod
-from types import FunctionType, MethodType
+from re import sub
 from typing import Optional, Self
 from eazydocs.core._parser import _Parser
 from eazydocs.core.method import Method
@@ -105,15 +105,19 @@ class ClassType(metaclass=_Parser):
 
         # Parse the docstring of the __init__ method
         docstring = Method(method)
-        function_fmtd = docstring.function.replace(
-            "--init--", self.name
-        ).replace("__init__", self.name)
+        docstring.name = self.name
+
+        # function_fmtd = docstring.function.replace(
+        #     "--init--", self.name
+        # ).replace("__init__", self.name)
 
         # Append the formatted function signature and summary
-        output += f"{function_fmtd}\n\n{docstring.summary}\n\n"
+        output += f"{docstring.function}\n\n{docstring.summary}\n\n"
         # Append the examples if they exist
         if docstring.args:
             output += f"> Parameters:\n\n{docstring.args_fmtd}\n\n"
+
+        output = sub(r"--init--|__init__", self.name, output)
 
         if docstring.examples:
             output += f"> Examples:\n\n{docstring.examples}\n\n"
