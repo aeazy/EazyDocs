@@ -1,4 +1,6 @@
-from typing import NamedTuple, TypedDict
+from pathlib import Path
+from types import FunctionType, MethodType
+from typing import NamedTuple, TypedDict, Union
 
 
 class ParamsDict(TypedDict):
@@ -11,3 +13,7 @@ class ArgsTuple(NamedTuple):
     param: str
     arg_type: str
     description: str
+
+
+ClassMethodType = Union[object, FunctionType, MethodType]
+StrPathType = Union[str, Path]
