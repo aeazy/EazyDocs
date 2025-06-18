@@ -332,7 +332,7 @@ class Method(metaclass=_Parser):
             description (str): String expression to format.
         """
         arg = re.sub(r"\s+", " ", description).strip()
-        pattern = r"[`']"
+        pattern = r"`"
         count = 0
 
         def replace(arg):
@@ -412,7 +412,7 @@ class Method(metaclass=_Parser):
     @property
     def docstring(self) -> str:
         """The docstring of the method."""
-        return self.method.__doc__
+        return self.method.__doc__ or ""
 
     @property
     def docstring_split(self) -> list[str] | None:
