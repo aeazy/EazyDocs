@@ -47,7 +47,7 @@ class Example:
     def example_method(
         self, param: list, param2: str = None, param3: str = "Test"
     ) -> None:
-        """Example method for <class Example>.
+        """Example updated method for Example class.
 
         Args:
             param (list): Example required argument. If `param=None` then...

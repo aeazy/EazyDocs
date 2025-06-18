@@ -9,6 +9,7 @@ from eazydocs.core._types import (
 from eazydocs.core.functions import create_md_file
 from eazydocs.core.method import Method
 from eazydocs.markdown.reader import Reader
+from eazydocs.markdown.writer import Writer
 
 
 class Updater:
@@ -31,9 +32,10 @@ class Updater:
                 provided file.
             filename (StrPathType): String or Path object representing the
                 filename where the documentation is stored.
-            path (StrPathType, optional): The path where the file is located.
-                Defaults to None.
-
+            path (StrPathType, optional): String or Path object for the path
+                where the file will be saved. If not provided, the file will be
+                saved in the current working directory. If provided, the
+                `filename` will be joined to `path` argument. Defaults to None.
         """
         # Class provided, overwrite the file
         if isclass(class_or_method):
@@ -69,7 +71,9 @@ class Updater:
             # Append new method to the file
             contents = f"{contents}\n{method_docs}"
         else:
-            self._trim_old_method(contents, method.__name__, method_docs)
+            self._update_method(
+                contents, method.__name__, method_docs, filepath
+            )
 
     def _valid_file(
         self,
@@ -115,18 +119,34 @@ class Updater:
             methods = reader.methods
         return contents, methods
 
-    def _trim_old_method(
-        self, current_docs: str, method_name: str, new_docs: str
+    def _update_method(
+        self,
+        current_docs: str,
+        method_name: str,
+        new_docs: str,
+        filepath: Path,
     ) -> None:
+        """Trim the old method documentation from the markdown file and
+        replace it with the new documentation.
+
+        Args:
+            current_docs (str):  Current contents of the markdown file.
+            method_name (str): Name of the method to be updated.
+            new_docs (str): New documentation for the method.
+            filepath (Path): Path object pointing to the markdown file to be
+                updated.
+        """
         # Format the method name to match the markdown format
         method_name = method_name.replace("_", "-")
         method_name = f"<strong id='{method_name}'"
         # Find the start and end of the old method
         start = current_docs.find(method_name)
         end = current_docs[start:].find("<hr>")
+        # Get before and after old method docs
+        before = current_docs[:start].strip()
+        after = current_docs[(start + (end + 4)) :].strip()
+        # Join parts
+        updated_docs = f"{before}\n\n{new_docs}\n{after}"
 
-        print(current_docs[start : start + end])
-
-        # start = current_docs.find(method_name) - (len(method_name) + 14)
-        # end = current_docs[start:].find("<hr>")
-        # print(current_docs[start : start + end])
+        writer = Writer(updated_docs, filepath, overwrite=True, update=True)
+        return writer.write()

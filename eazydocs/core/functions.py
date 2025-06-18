@@ -1,10 +1,9 @@
-from os import mkdir
-from pathlib import Path
 from types import FunctionType, MethodType
 from typing import Optional
 from eazydocs.core._types import ClassMethodType, StrPathType
 from eazydocs.core.method import Method
 from eazydocs.core.class_type import ClassType
+from eazydocs.markdown.writer import Writer
 
 
 def get_documentation(
@@ -39,62 +38,8 @@ def get_documentation(
             include_examples=include_examples,
         )
         docs = cls.parse(to_clipboard=to_clipboard)
+
     return docs
-
-
-def _get_filepath(
-    filename: StrPathType,
-    path: Optional[StrPathType] = None,
-    overwrite: bool = False,
-) -> Path:
-    """Get the filepath for the markdown file.
-
-    Args:
-        filename (StrPathType): String or Path object for the filename.
-        path (StrPathType, optional): Directory path where the file will be
-            saved. If not provided, the file will be saved in the current
-            working directory. If provided, the `filename` will be joined to
-            `path` argument. Defaults to None.
-        overwrite (bool, optional): If True, the existing file will be
-            overwritten without confirmation. Defaults to False.
-
-    Returns:
-        Path: The Path object representing the filepath for the markdown file.
-    """
-    if isinstance(filename, str) and not filename.endswith(".md"):
-        filename = f"{filename}.md"
-
-    if path is not None:
-        if isinstance(path, str):
-            path = Path(path)
-        filepath = Path(path) / filename
-    else:
-        if isinstance(filename, str):
-            filepath = Path(filename)
-        else:
-            # Filename is already a Path object - Sanitize it
-            if not filename.suffix:
-                filename = f"{filename}.md"
-            filepath = filename
-
-    if not filepath.exists():
-        filepath.parent.mkdir(parents=True, exist_ok=True)
-    elif not overwrite:
-        while True:
-            confirm = input(
-                f"Filepath '{filepath}' already exists. Do you want to overwrite it? (y/n): "
-            )
-            match confirm.lower():
-                case "y":
-                    print(f"Overwriting existing file: '{filepath}'")
-                    break
-                case "n":
-                    print("Exiting without overwriting the file.")
-                    return False
-                case _:
-                    print("Invalid input. Please enter 'y' or 'n'.")
-
-    return filepath
 
 
 def create_md_file(
@@ -119,19 +64,39 @@ def create_md_file(
         overwrite (bool, optional): If True, the existing file will be
             overwritten without confirmation. Defaults to False.
     """
-    # Get the filepath
-    filepath = _get_filepath(filename, path, overwrite)
-    if not filepath:
-        return
-    # Generate the documentation
     docs = get_documentation(class_or_method, to_clipboard=False)
 
-    with open(filepath, "w+") as f:
-        f.write(docs)
+    writer = Writer(
+        contents=docs,
+        filename=filename,
+        path=path,
+        overwrite=overwrite,
+        **kwargs,
+    )
 
-    # Method to support <eazydocs.Updater>
-    if kwargs:
-        if kwargs.get("update") is not None:
-            print(f"Successfully updated markdown file: '{filepath}")
-    else:
-        print(f"Successfully created markdown file: '{filepath}'")
+    writer.write()
+
+
+def update_md_file(
+    class_or_method: ClassMethodType,
+    filename: StrPathType,
+    path: Optional[StrPathType] = None,
+) -> None:
+    """Update an EazyDocs generated markdown file.
+
+    If a class is provided, it will overwrite the provided file. Otherwise, it
+    will trim the old method documentation from the file, insert the updated
+    documentation, and write it to the given `filename`.
+
+    Args:
+        class_or_method (ClassMethodType): Class or method to update.
+        filename (StrPathType): String or Path object representing the
+            markdown file to update.
+        path (StrPathType, optional): String or Path object for the path
+            where the file will be saved. If not provided, the file will be
+            saved in the current working directory. If provided, the
+            `filename` will be joined to `path` argument. Defaults to None.
+    """
+    from eazydocs.markdown.updater import Updater
+
+    Updater(class_or_method, filename, path)
