@@ -1,6 +1,13 @@
 from types import FunctionType, MethodType
 from typing import Optional
-from eazydocs.core._types import ClassMethodType, StrPathType
+
+from pandas import DataFrame
+from eazydocs.core._types import (
+    ClassMethodType,
+    FunctionMethodType,
+    StrPathType,
+)
+from eazydocs.core.example import DfShape, Example
 from eazydocs.core.method import Method
 from eazydocs.core.class_type import ClassType
 from eazydocs.markdown.writer import Writer
@@ -100,3 +107,42 @@ def update_md_file(
     from eazydocs.markdown.updater import Updater
 
     Updater(class_or_method, filename, path)
+
+
+def get_example(
+    arg: DataFrame | FunctionMethodType,
+    df_shape: Optional[tuple[int, int] | DfShape] = None,
+    copy_to_clipboard: bool = True,
+    append_to_method: Optional[str] = None,
+    filename: Optional[StrPathType] = None,
+    path: Optional[StrPathType] = None,
+) -> None:
+    """Generate an example representation of a DataFrame or method.
+
+    Args:
+        arg (DataFrame | FunctionMethodType): The DataFrame or method to
+            generate an example for.
+        df_shape (tuple[int,int] | DfShape, optional): A tuple or
+            DfShape specifying the number of rows and columns to display
+            from the DataFrame. If `type(arg)==DataFrame` and
+            `df_shape=None`, the default shape of (5,5) will be used.
+            Defaults to None.
+        copy_to_clipboard (bool, optional): If True, the output will be
+            copied to the clipboard. Defaults to True.
+        append_to_method (str, optional): If provided, the example will be
+            appended to the specified method in the markdown file. If
+            `append_to_method!=None`, `filename` must also be provided.
+            Optionally providing the `path` argument. Defaults to None.
+        filename (StrPathType, optional): String or Path object for the
+            filename. Defaults to None.
+        path (StrPathType, optional): Directory path where the file will be
+            located. Defaults to None.
+    """
+    Example(
+        arg=arg,
+        df_shape=df_shape,
+        copy_to_clipboard=copy_to_clipboard,
+        append_to_method=append_to_method,
+        filename=filename,
+        path=path,
+    )

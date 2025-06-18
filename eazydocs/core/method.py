@@ -158,7 +158,7 @@ class Method(metaclass=_Parser):
         if self.args is not None:
             output += f"> Parameters:\n\n{self.args_fmtd}\n"
         if self.include_examples and self.examples is not None:
-            output += f"> Examples:\n{self.examples}"
+            output += f"> Examples:\n\n{self.examples}"
 
         output += "\n<hr>\n"
 
@@ -230,7 +230,7 @@ class Method(metaclass=_Parser):
 
         examples_section = examples_section.group(0)
 
-        pattern = re.compile(r"^\s{4}(\S.*)\n((\s{8}.*\n)+)", re.MULTILINE)
+        pattern = re.compile(r"^\s{8}(\S.*)\n((\s{8}.*\n)*)", re.MULTILINE)
         matches = pattern.findall(examples_section)
 
         if matches is None:

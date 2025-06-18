@@ -61,6 +61,9 @@ class Example:
         Read
 
             >>> d
+            col1     col2
+            0       First
+            1      Second
         """
 
         pass

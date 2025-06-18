@@ -1,25 +1,19 @@
 # EazyDocs
 
-eazydocs looks to provide an easy way to generate code documentation by cutting down repetitive boilerplate input. By providing a class or method object, you can generate a markdown (MD) file that mixes markdown and html formatting to clearly define your code.
+EazyDocs provides a simple way to generate documentation for Python classes and
+methods. By providing a class or method object, you can generate a markdown (MD)
+file that mixes markdown and html formatting to clearly define your code.
 
-`eazydocs.generate_docs` will scrape a Class object for functions and methods, then scrape the parameter names, types, and default arguments for each, returning a string expression formatted for a MD file. Passing a Function or Method object will do the same, instead only for the desired object. Optionally, you can create a MD file from the output, or append it to an existing file.
-
-`eazydocs.generate_example` will format a pandas.DataFrames to include as an example in your README file. Optionally, you can append the example to an existing MD file, with the ability to specify the specific function or method you would like to insert the string expression under.
-
-## Table of Contents
+### Table of Contents
 
 - [Installation](#installation)
-- `eazydocs.generate_docs`:
-  - [Overview](#eazydocsgenerate_docs)
-  - [Using a Class object](#using-a-class-object)
-  - [Using a Method object](#using-a-method-object)
-  - [Creating a MD File](#creating-a-md-file)
-- `eazydocs.generate_example`:
-  - [Overview](#eazydocsgenerate_example)
-  - [Generating an Example](#creating-an-example-from-a-pandasdataframe)
-  - [Appending to an Existing MD File](#appending-the-example-to-an-existing-md-file)
+- [Methods](#methods)
+  - [`get_documentation`](#get-documentation)
+  - [`create_md_file`](#create-md_file)
+  - [`update_md_file`](#update-md-file)
+  - [`get_example`](#get-example)
 
-### Installation
+## Installation
 
 - Install the eazydocs module using your preferred package manager:z
   ```
@@ -27,453 +21,285 @@ eazydocs looks to provide an easy way to generate code documentation by cutting 
   ```
 - Alternatively, the .whl can be downloaded and installed:
   ```
-  pip install eazydocs-24.X.X-py3-none-any.whl
+  pip install eazydocs-X.X.X-py3-none-any.whl
   ```
 
-### eazydocs.generate_docs
+## Methods
 
-<strong id='generate-docs'>generate_docs</strong>(<b>obj</b>, <b>append_to_file</b><i>=False</i>, <b>skip_private</b><i>=True</i>, <b>filename</b><i>=\_NoDefault.no_default</i>, <b>filepath</b><i>=\_NoDefault.no_default</i>)
+<strong id='get-documentation'>get_documentation</strong>(<b>class_or_method</b>=<i>None</i>, <b>include_methods</b>=<i>True</i>, <b>include_private_methods</b>=<i>False</i>, <b>include_examples</b>=<i>True</i>, <b>to_clipboard</b>=<i>True</i>)
 
-> Parameters
+Generate documentation for a class or method.
 
-<ul style='list-style: none'>
+> Parameters:
+
+<ul>
     <li>
-        <b>obj : <i>object</i></b>
+        <b id='get_documentation-class_or_method'>class_or_method : <i>object | FunctionType | MethodType, None</i></b>
         <ul style='list-style: none'>
-            <li>A Class or Method object.</li>
+            <li id='get_documentation-class_or_method-description'>The class or method to generate documentation for.</li>
         </ul>
     </li>
     <li>
-        <b>append_to_file : <i>bool, default False</i></b>
+        <b id='get_documentation-include_methods'>include_methods : <i>bool, optional, True</i></b>
         <ul style='list-style: none'>
-            <li>Append the output string expression to a MD file.</li>
+            <li id='get_documentation-include_methods-description'>Whether to include methods in the documentation. Defaults to True.</li>
         </ul>
     </li>
     <li>
-        <b>skip_private : <i>bool, default True</i></b>
+        <b id='get_documentation-include_private_methods'>include_private_methods : <i>bool, optional, False</i></b>
         <ul style='list-style: none'>
-            <li>Include functions or methods with the prefix '_' or '__'.</li>
+            <li id='get_documentation-include_private_methods-description'>Whether to include private methods in the documentation. Defaults to False.</li>
         </ul>
     </li>
     <li>
-        <b>filename : <i>str, optional</i></b>
+        <b id='get_documentation-include_examples'>include_examples : <i>bool, optional, True</i></b>
         <ul style='list-style: none'>
-            <li>String expression of the markdown file to append. Required argument if <code>append_to_file=True</code>.</li>
+            <li id='get_documentation-include_examples-description'>Whether to include examples in the documentation. Defaults to True.</li>
         </ul>
     </li>
     <li>
-        <b>filepath : <i>str, optional</i></b>
+        <b id='get_documentation-to_clipboard'>to_clipboard : <i>bool, optional, True</i></b>
         <ul style='list-style: none'>
-            <li>String expression of the absolute path to the markdown file you are appending. If <code>append_to_file=True</code>, and <code>filepath=None</code>, the <code>filename</code> is expected to be in the current working directory.</li>
+            <li id='get_documentation-to_clipboard-description'>If True, the output will be copied to the clipboard. Defaults to True.</li>
         </ul>
     </li>
 </ul>
 
-#### Using a Class object
+> Examples:
 
-- This example generates documents for the object `easydocs.Method`:
+Basic Usage with a Class:
 
-  ```
-  >>> from eazydocs import generate_docs
+```python
+from eazydocs import get_documentation
 
-  >>> docs = generate_docs(Method)
-  >>> print(docs)
+>>> get_documentation(ExampleClass)
+Successfully copied to clipboard!
+```
 
-  <strong id='method'>Method</strong>(<b>method_name</b>)
+- Output for `ExampleClass` will contain the documentation for the class and its
+  methods.
+- Using `include_methods=False` will exclude methods from the output.
+- Using `include_private_methods=True` will include private methods in the
+  output.
+- Using `include_examples=False` will exclude examples from the output.
+- Using `to_clipboard=False` will allow you to print the output to the console
+  instead of copying it to the clipboard.
 
-  > Parameters
+Basic Usage with a Method:
 
-  <ul style='list-style: none'>
-      <li>
-          <b>method_name : <i>str</i></b>
-          <ul style='list-style: none'>
-              <li>{description}</li>
-          </ul>
-      </li>
-  </ul>
-  ```
+```python
+from eazydocs import get_documentation
 
-- The resulting MD file, when rendered:
-    <div style="border:1px solid gray; padding: 10px">
-    <strong id='method'>Method</strong>(<b>method_name</b>)<br><br>
+>>> get_documentation(ExampleClass.example_method)
+Successfully copied to clipboard!
+```
 
-  > Parameters
+- Output for `ExampleClass.example_method` will contain the documentation for the
+  method only.
 
-    <ul style='list-style: none'>
-        <li>
-            <b>method_name : <i>str</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-    </ul>
-    </div>
+<hr>
 
-* Notice the placeholder generated under the method name: 'description'.
+<strong id='create-md-file'>create_md_file</strong>(<b>class_or_method</b>=<i>None</i>, <b>filename</b>=<i>"README.md"</i>, <b>path</b>=<i>None</i>, <b>overwrite</b>=<i>False</i>)
 
-#### Using a Method object
+Generate a markdown file for a class or method.
 
-- This example generates documents for the object `eazydocs.generate_docs`:
+> Parameters:
 
-  ```
-    >>> from eazydocs import generate_docs
-
-    >>> docs = generate_docs(generate_docs)
-    >>> print(docs)
-
-    <strong id='generate-docs'>generate_docs</strong>(<b>obj</b>, <b>append_to_file</b><i>=False</i>, <b>filename</b><i>=_NoDefault.no_default</i>, <b>filepath</b><i>=_NoDefault.no_default</i>)
-
-    > Parameters
-
-    <ul style='list-style: none'>
-        <li>
-            <b>obj : <i>object</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-        <li>
-            <b>append_to_file : <i>bool, default False</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-        <li>
-            <b>filename : <i>str, optional</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-        <li>
-            <b>filepath : <i>str, optional</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-    </ul>
-  ```
-
-- The resulting MD file when rendered:
-    <div style="border:1px solid gray; padding: 10px">
-    <strong id='generate-docs'>generate_docs</strong>(<b>obj</b>, <b>append_to_file</b><i>=False</i>, <b>filename</b><i>=_NoDefault.no_default</i>, <b>filepath</b><i>=_NoDefault.no_default</i>)
-
-  > Parameters
-
-    <ul style='list-style: none'>
-        <li>
-            <b>obj : <i>object</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-        <li>
-            <b>append_to_file : <i>bool, default False</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-        <li>
-            <b>filename : <i>str, optional</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-        <li>
-            <b>filepath : <i>str, optional</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-    </ul>    
-    </div>
-
-#### Creating a MD file
-
-- To create a MD file from `generate_docs` output, you can set its `append_to_file` to True. This will create a `README.md` file in your current working directory:
-
-  ```
-  >>> from eazydocs import generate_docs
-
-  >>> generate_docs(Method, append_to_file=True)
-  ```
-
-- However, you may want to append the documents to an existing MD file, in which case you can provide the `filename`:
-
-  ```
-  >>> from eazydocs import generate_docs
-
-  >>> generate_docs(
-        Method,
-        append_to_file=True,
-        filename='METHOD'
-      )
-  ```
-
-- Optionally, you can provide a `filepath` to the MD file, in addition to the `filename`:
-
-  ```
-  >>> from eazydocs import generate_docs
-
-  >>> generate_docs(
-        Method,
-        append_to_file=True,
-        filename='METHOD',
-        filepath='~/$USER/eazydocs/output'
-      )
-  ```
-
-  - The string argument provided to `filepath` is joined with `filename` as a pathlib.Path object
-
-### eazydocs.generate_example
-
-<strong id='generate-example'>generate_example</strong>(<b>df</b>, <b>df_shape</b><i>=[5, 5]</i>, <b>code</b><i>='df'</i>, <b>append_to_file</b><i>=False</i>, <b>filename</b><i>=\_NoDefault.no_default</i>, <b>filepath</b><i>=\_NoDefault.no_default</i>, <b>method_name</b><i>=\_NoDefault.no_default</i>)
-
-> Parameters
-
-<ul style='list-style: none'>
+<ul>
     <li>
-        <b>df : <i>pandas.DataFrame</i></b>
+        <b id='create_md_file-class_or_method'>class_or_method : <i>ClassMethodType, None</i></b>
         <ul style='list-style: none'>
-            <li>Pandas DataFrame to format.</li>
+            <li id='create_md_file-class_or_method-description'>Class or method to generate documentation for.</li>
         </ul>
     </li>
     <li>
-        <b>df_shape : <i>list[int], default [5, 5]</i></b>
+        <b id='create_md_file-filename'>filename : <i>StrPathType, optional, "README.md"</i></b>
         <ul style='list-style: none'>
-            <li>Integer list defining the desired shape of the <code>df</code>. First integer is the desired number of rows, while the second is the desired number of columns. Passing <code>df_shape=[-1, -1]</code> will generate the string expression without reshaping <code>df</code> - not recommended for large DataFrames.</li>
+            <li id='create_md_file-filename-description'>String or Path object for the filename. If a string object is provided, the file will be saved to the current working directory. Defaults to "README.md".</li>
         </ul>
     </li>
     <li>
-        <b>code : <i>str, default 'df'</i></b>
+        <b id='create_md_file-path'>path : <i>StrPathType, optional, None</i></b>
         <ul style='list-style: none'>
-            <li>Line of code you would like displayed before the DataFrame example. This is useful if you are demonstrating how a method changes a DataFrame.</li>
+            <li id='create_md_file-path-description'>Directory path where the file will be saved. If not provided, the file will be saved in the current working directory. If provided, the <code>filename</code> will be joined to <code>path</code> argument. Defaults to None.</li>
         </ul>
     </li>
     <li>
-        <b>append_to_file : <i>bool, default False</i></b>
+        <b id='create_md_file-overwrite'>overwrite : <i>bool, optional, False</i></b>
         <ul style='list-style: none'>
-            <li>Append output string expression to an existing MD file.</li>
-        </ul>
-    </li>
-    <li>
-        <b>filename : <i>str, optional</i></b>
-        <ul style='list-style: none'>
-            <li>String expression of the markdown file to append. Required argument if <code>append_to_file=True</code>.</li>
-        </ul>
-    </li>
-    <li>
-        <b>filepath : <i>str, optional</i></b>
-        <ul style='list-style: none'>
-            <li>String expression of the absolute path to the markdown file you are appending. If <code>append_to_file=True</code>, and <code>filepath=None</code>, the MD file is expected to be in the current working directory.</li>
-        </ul>
-    </li>
-    <li>
-        <b>method_name : <i>str, optional</i></b>
-        <ul style='list-style: none'>
-            <li>String expression of the specific method name you would like to insert this example under. If <code>method_name=None</code>, the string generated from the example is inserted at the end of the MD file.</li>
+            <li id='create_md_file-overwrite-description'>If True, the existing file will be overwritten without confirmation. Defaults to False.</li>
         </ul>
     </li>
 </ul>
 
-#### Creating an Example from a pandas.DataFrame
+> Examples:
 
-- Basic example using default parameters:
+Basic Usage:
 
-  ````
-  >>> from eazydocs import generate_example
-  >>> df = DataFrame({'col_1': [0, 1, 2, 3, 4, 5], 'col_2': [0, 1, 2, 3, 4, 5], 'col_3': [0, 1, 2, 3, 4, 5] ... 'col_10': [0, 1, 2, 3, 4, 5]})
-  >>> df.shape
-      (7, 10)
+```python
+from eazydocs import create_md_file
 
-  >>> example = generate_example(df)
-  >>> example
-      ```
-      >>> df
-      col_1  col_2  col_3  col_4  col_5
-      0      0      0      0      0      0
-      1      1      1      1      1      1
-      2      2      2      2      2      2
-      3      3      3      3      3      3
-      4      4      4      4      4      4
-      ```
-  ````
-
-- Specifying the shape of the DataFrame before its formatted to a string expression:
-
-  ````
-      >>> df = DataFrame({'col_1': [0, 1, 2, 3, 4, 5], 'col_2': [0, 1, 2, 3, 4, 5], 'col_3': [0, 1, 2, 3, 4, 5] ... 'col_10': [0, 1, 2, 3, 4, 5]})
-      >>> df.shape
-          (7, 10)
-
-      >>> example = generate_example(df, df_shape=(5,10))
-      >>> example
-          ```
-          >>> df
-          col_1  col_2  col_3  col_4  col_5
-          0      0      0      0      0      0
-          1      1      1      1      1      1
-          2      2      2      2      2      2
-          3      3      3      3      3      3
-          4      4      4      4      4      4
-          ```
-  ````
-
-- Specifying the code displayed before the string expression:
-
-  ````
-  >>> dff = DataFrame({'col_1': [0, 1, 2, 3, 4, 5], 'col_2': [0, 1, 2, 3, 4, 5], 'col_3': [0, 1, 2, 3, 4, 5] ... 'col_10': [0, 1, 2, 3, 4, 5]})
-
-  >>> example = generate_example(dff, code = 'dff')
-  >>> example
-      ```
-      >>> dff
-      col_1  col_2  col_3  col_4  col_5
-      0      0      0      0      0      0
-      1      1      1      1      1      1
-      2      2      2      2      2      2
-      3      3      3      3      3      3
-      4      4      4      4      4      4
-      ```
-  ````
-
-#### Appending the example to an existing MD file:
-
-```
->>> generate_example(df, append_to_file=True, filename='EXAMPLE')
-Succesfully updated 'EXAMPLE.md' (~/$USER/easydocs/EXAMPLE.md)
+>>> create_md_file(ExampleClass)
+Successfully created markdown file: 'README.md'
 ```
 
-- Appending the example to a method in an existing MD file:
+- File is created in the current working directory with the name "README.md".
 
-  - **Note**: This requires the existing MD file to have been created, or at least the desired method, using `eazydocs.generate_docs()`.
+Specifying a filename and path:
 
-    **cls.py**
+```python
+from eazydocs import create_md_file
 
-    ```
-    class Cls:
-        def __init__(self, s1: str) -> None:
-            ...
+>>> create_md_file(ExampleClass, filename="ExampleClass.md", path="./docs")
+Successfully created markdown file: './docs/ExampleClass.md'
+```
 
-        def method_1(self, new_str: str) -> str:
-            ...
+<hr>
 
-        def method_2(self, another_str: str, optional_str: str) -> str:
-            ...
-    ```
+<strong id='update-md-file'>update_md_file</strong>(<b>class_or_method</b>=<i>None</i>, <b>filename</b>=<i>None</i>, <b>path</b>=<i>None</i>)
 
-    **~/\$USER/README.md**
-    <div style="border:1px solid gray; padding: 10px">
+Update an EazyDocs generated markdown file. If a class is provided, it will overwrite the provided file. Otherwise, it will trim the old method documentation from the file, insert the updated documentation, and write it to the given `filename`.
 
-    <strong id='cls'>Cls</strong>(<b>s1</b>)
+> Parameters:
 
-    > Parameters
+<ul>
+    <li>
+        <b id='update_md_file-class_or_method'>class_or_method : <i>ClassMethodType, None</i></b>
+        <ul style='list-style: none'>
+            <li id='update_md_file-class_or_method-description'>Class or method to update.</li>
+        </ul>
+    </li>
+    <li>
+        <b id='update_md_file-filename'>filename : <i>StrPathType, None</i></b>
+        <ul style='list-style: none'>
+            <li id='update_md_file-filename-description'>String or Path object representing the markdown file to update.</li>
+        </ul>
+    </li>
+    <li>
+        <b id='update_md_file-path'>path : <i>StrPathType, optional, None</i></b>
+        <ul style='list-style: none'>
+            <li id='update_md_file-path-description'>String or Path object for the path where the file will be saved. If not provided, the file will be saved in the current working directory. If provided, the <code>filename</code> will be joined to <code>path</code> argument. Defaults to None.</li>
+        </ul>
+    </li>
+</ul>
 
-    <ul style='list-style: none'>
-        <li>
-            <b>s1 : <i>str</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-    </ul>
+> Notes:
 
-    <strong id='method-1'>method_1</strong>(<b>new_str</b>)
+- The markdown file must have been generated by EazyDocs for the update to work.
+- Updating a class will overwrite the entire file.
 
-    > Parameters
+> Examples:
+> Basic Usage with a Class:
 
-    <ul style='list-style: none'>
-        <li>
-            <b>new_str : <i>str</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-    </ul>
+```python
+from eazydocs import update_md_file
 
-    <strong id='method-2'>method_2</strong>(<b>another_str</b>, <b>optional_str</b>)
+>>> update_md_file(ExampleClass, filename="README.md")
+Successfully updated markdown file: 'README.md'
+```
 
-    > Parameters
+- Since a class is provided, the entire file will be overwritten with the new
+  documentation.
 
-    <ul style='list-style: none'>
-        <li>
-            <b>another_str : <i>str</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-        <li>
-            <b>optional_str : <i>str</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-    </ul><br>
+Basic Usage with a Method:
 
-    **~/\$USER/main.py**
+```python
+from eazydocs import update_md_file
 
-        ```
-        >>> df = DataFrame({'col_1': [0, 1, 2, 3, 4, 5], 'col_2': [0, 1, 2, 3, 4, 5], 'col_3': [0, 1, 2, 3, 4, 5] ... 'col_10': [0, 1, 2, 3, 4, 5]})
+>>> update_md_file(ExampleClass.example_method, filename="README.md")
+Successfully updated markdown file: 'README.md'
+```
 
-        >>> generate_example(df, df_shape=(5,10), append_to_file=True, filename='README', method_name='method_1')
-        Successfully update 'method_1' in 'README.md' (~/$USER/README.md)
-        ```
+- Since a method is provided, only the documentation for that method will be
+  updated in the file.
 
-    **~/\$USER/README.md**
-    <div style="border:1px solid gray; padding: 10px">
-    <strong id='cls'>Cls</strong>(<b>s1</b>)
+<hr>
 
-    > Parameters
+<strong id='get-example'>get_example</strong>(<b>arg</b>=<i>None</i>, <b>df_shape</b>=<i>None</i>, <b>copy_to_clipboard</b>=<i>True</i>, <b>append_to_method</b>=<i>None</i>, <b>filename</b>=<i>None</i>, <b>path</b>=<i>None</i>)
 
-    <ul style='list-style: none'>
-        <li>
-            <b>s1 : <i>str</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-    </ul>
+Generate an example representation of a DataFrame or method.
 
-    <strong id='method-1'>method_1</strong>(<b>new_str</b>)
+> Parameters:
 
-    > Parameters
+<ul>
+    <li>
+        <b id='get_example-arg'>arg : <i>DataFrame | FunctionMethodType, None</i></b>
+        <ul style='list-style: none'>
+            <li id='get_example-arg-description'>The DataFrame or method to generate an example for.</li>
+        </ul>
+    </li>
+    <li>
+        <b id='get_example-df_shape'>df_shape : <i>tuple[int,int] | DfShape, optional, None</i></b>
+        <ul style='list-style: none'>
+            <li id='get_example-df_shape-description'>A tuple or DfShape specifying the number of rows and columns to display from the DataFrame. If <code>type(arg)==DataFrame</code> and <code>df_shape=None</code>, the default shape of (5,5) will be used. Defaults to None.</li>
+        </ul>
+    </li>
+    <li>
+        <b id='get_example-copy_to_clipboard'>copy_to_clipboard : <i>bool, optional, True</i></b>
+        <ul style='list-style: none'>
+            <li id='get_example-copy_to_clipboard-description'>If True, the output will be copied to the clipboard. Defaults to True.</li>
+        </ul>
+    </li>
+    <li>
+        <b id='get_example-append_to_method'>append_to_method : <i>str, optional, None</i></b>
+        <ul style='list-style: none'>
+            <li id='get_example-append_to_method-description'>If provided, the example will be appended to the specified method in the markdown file. If <code>append_to_method!=None</code>, <code>filename</code> must also be provided. Optionally providing the <code>path</code> argument. Defaults to None.</li>
+        </ul>
+    </li>
+    <li>
+        <b id='get_example-filename'>filename : <i>StrPathType, optional, None</i></b>
+        <ul style='list-style: none'>
+            <li id='get_example-filename-description'>String or Path object for the filename. Defaults to None.</li>
+        </ul>
+    </li>
+    <li>
+        <b id='get_example-path'>path : <i>StrPathType, optional, None</i></b>
+        <ul style='list-style: none'>
+            <li id='get_example-path-description'>Directory path where the file will be located. Defaults to None.</li>
+        </ul>
+    </li>
+</ul>
 
-    <ul style='list-style: none'>
-        <li>
-            <b>new_str : <i>str</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-    </ul>
+> Examples:
 
-    > Example
+Basic Usage with a DataFrame:
 
-    ```
-    >>> df
-    col_1  col_2  col_3  col_4  col_5
-    0      0      0      0      0      0
-    1      1      1      1      1      1
-    2      2      2      2      2      2
-    3      3      3      3      3      3
-    4      4      4      4      4      4
-    ```
+```python
+import pandas as pd
+from eazydocs import get_example
 
-    <strong id='method-2'>method_2</strong>(<b>another_str</b>, <b>optional_str</b>)
+>>> df = pd.DataFrame({
+...     "A": range(1, 11),
+...     "B": range(11, 21),
+})
+>>> get_example(df, df_shape=(3, 2))
+Successfully copied to clipboard!
+```
 
-    > Parameters
+- Output will be a markdown table representation of the DataFrame with 3 rows and
+  2 columns:
+  ```markdown
+  |   A |   B |
+  | --: | --: |
+  |   1 |  11 |
+  |   2 |  12 |
+  |   3 |  13 |
+  ```
 
-    <ul style='list-style: none'>
-        <li>
-            <b>another_str : <i>str</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-        <li>
-            <b>optional_str : <i>str</i></b>
-            <ul style='list-style: none'>
-                <li>description</li>
-            </ul>
-        </li>
-    </ul>
-    </div>
+Basic Usage with a Method:
+
+```python
+from eazydocs import get_example
+
+>>> def example_method(x):
+...     return x * 2
+>>> get_example(example_method)
+Successfully copied to clipboard!
+```
+
+- Output will be a code block boilerplate for the method:
+  ```python
+  example_method()
+  ```
+
+<hr>
